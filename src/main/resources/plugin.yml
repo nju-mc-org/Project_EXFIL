@@ -1,7 +1,7 @@
 name: Project_EXFIL
-version: 'v1.14.514'
+version: '1.14.514'
 main: org.nmo.project_exfil.ProjectEXFILPlugin
-api-version: '1.21'
-authors: [ NJU Minecraft Organization ]
+api-version: '1.21.6'
+authors: [ NJU Minecraft Organization, Kingcq ]
 description: Tarkov-like game in Minecraft, a simple paper plugin
 website: nmo.net.cn
