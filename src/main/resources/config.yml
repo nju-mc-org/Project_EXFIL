@@ -1,2 +1,8 @@
 # Update interval for chest UI
 chest-ui-update-interval: 5
+# Footstep update interval
+footstep-interval: 4
+# Sprint footstep make noise interval
+footstep-interval-sprint: 4
+# Walk footstep make noise interval
+footstep-interval-walk: 8
