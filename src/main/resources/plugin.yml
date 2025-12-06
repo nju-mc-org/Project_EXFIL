@@ -5,3 +5,16 @@ api-version: '1.21.6'
 authors: [ NJU Minecraft Organization, Kingcq ]
 description: Tarkov-like game in Minecraft, a simple paper plugin
 website: nmo.net.cn
+depend: [FastAsyncWorldEdit, WorldGuard, Multiverse-Core]
+commands:
+  exfil:
+    description: Main command for Project EXFIL
+    usage: /exfil [setextract]
+    permission: exfil.use
+permissions:
+  exfil.admin:
+    description: Admin permission for Project EXFIL
+    default: op
+  exfil.use:
+    description: User permission for Project EXFIL
+    default: true

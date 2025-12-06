@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id("xyz.jpenilla.run-paper") version "2.3.1"
+    id "io.github.goooler.shadow" version "8.1.8"
 }
 
 group = 'org.nmo.project_exfil'
@@ -24,6 +25,18 @@ repositories {
         name = "citizens-repo"
         url = "https://maven.citizensnpcs.co/repo"
     }
+    maven {
+        name = "enginehub"
+        url = "https://maven.enginehub.org/repo/"
+    }
+    maven {
+        name = "intellectualsites"
+        url = "https://repo.intellectualsites.com/repository/public/"
+    }
+    maven {
+        name = "multiverse"
+        url = "https://repo.onarandombox.com/content/groups/public/"
+    }
 }
 
 dependencies {
@@ -32,6 +45,21 @@ dependencies {
         exclude group: '*', module: '*'
     }
     compileOnly("io.papermc.paper:paper-api:1.21.6-R0.1-SNAPSHOT")
+    
+    // Inventory Framework
+    implementation "com.github.stefvanschie.inventoryframework:IF:0.11.5"
+    
+    // WorldEdit / FAWE
+    compileOnly "com.fastasyncworldedit:FastAsyncWorldEdit-Core:2.11.1"
+    compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit:2.11.1") {
+        transitive = false
+    }
+    
+    // WorldGuard
+    compileOnly "com.sk89q.worldguard:worldguard-bukkit:7.0.10"
+    
+    // Multiverse-Core
+    compileOnly "org.mvplugins.multiverse.core:multiverse-core:5.0.0-SNAPSHOT"
 }
 
 tasks {
@@ -40,6 +68,24 @@ tasks {
         // This is the only required configuration besides applying the plugin.
         // Your plugin's jar (or shadowJar if present) will be used automatically.
         minecraftVersion("1.21.6")
+        
+        // Download and install plugins for the test server
+        downloadPlugins {
+            // WorldEdit / FAWE
+            modrinth("fastasyncworldedit", "2.14.2")
+            // WorldGuard
+            modrinth("worldguard", "7.0.14")
+            // Multiverse-Core
+            modrinth("multiverse-core", "5.3.4")
+        }
+    }
+    
+    shadowJar {
+        relocate 'com.github.stefvanschie.inventoryframework', 'org.nmo.project_exfil.inventoryframework'
+    }
+    
+    build {
+        dependsOn shadowJar
     }
 }
 
