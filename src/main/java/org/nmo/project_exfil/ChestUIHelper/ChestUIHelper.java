@@ -66,6 +66,8 @@ public class ChestUIHelper implements Listener {
         for (ChestUIStateStack stateStack : this.uiStateStacks) {
             if (stateStack.matchInventory(inventory)) {
                 stateStack.onClick(slot / 9, slot % 9);
+                event.setCancelled(true);
+                break;
             }
         }
     }
