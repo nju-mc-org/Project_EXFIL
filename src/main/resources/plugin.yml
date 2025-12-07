@@ -6,6 +6,7 @@ authors: [ NJU Minecraft Organization, Kingcq ]
 description: Tarkov-like game in Minecraft, a simple paper plugin
 website: nmo.net.cn
 depend: [FastAsyncWorldEdit, WorldGuard, Multiverse-Core]
+softdepend: [PlaceholderAPI, DecentHologramsDHAPI, TAB, Vault, LuckPerms, XConomy]
 commands:
   exfil:
     description: Main command for Project EXFIL

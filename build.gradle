@@ -29,14 +29,18 @@ repositories {
         name = "enginehub"
         url = "https://maven.enginehub.org/repo/"
     }
-    maven {
-        name = "intellectualsites"
-        url = "https://repo.intellectualsites.com/repository/public/"
-    }
+    // maven {
+    //     name = "intellectualsites"
+    //     url = "https://repo.intellectualsites.com/repository/public/"
+    // }
     maven {
         name = "multiverse"
         url = "https://repo.onarandombox.com/content/groups/public/"
     }
+    maven {
+        url = 'https://repo.extendedclip.com/releases/'
+    }
+    maven { url 'https://repo.codemc.io/repository/creatorfromhell/' }
 }
 
 dependencies {
@@ -60,6 +64,24 @@ dependencies {
     
     // Multiverse-Core
     compileOnly "org.mvplugins.multiverse.core:multiverse-core:5.0.0-SNAPSHOT"
+    
+    // PlaceholderAPI
+    compileOnly 'me.clip:placeholderapi:2.11.7'
+    
+    // DecentHolograms
+    compileOnly 'com.github.decentsoftware-eu:decentholograms:2.9.7'
+
+    // TAB
+    compileOnly 'com.github.NEZNAMY:TAB-API:5.3.2'
+
+    // VaultUnlockedAPI
+    compileOnly "net.milkbowl.vault:VaultUnlockedAPI:2.16"
+
+    // LuckPerms
+    compileOnly 'net.luckperms:api:5.4'
+
+    // XConomyAPI
+    compileOnly "com.github.YiC200333:XConomyAPI:2.25.1"
 }
 
 tasks {
@@ -77,6 +99,24 @@ tasks {
             modrinth("worldguard", "7.0.14")
             // Multiverse-Core
             modrinth("multiverse-core", "5.3.4")
+
+            // PlaceholderAPI
+            url("https://github.com/PlaceholderAPI/PlaceholderAPI/releases/download/2.11.7/PlaceholderAPI-2.11.7.jar")
+
+            // DecentHolograms
+            modrinth("decentholograms", "2.9.8")
+
+            // TAB
+            modrinth("tab-was-taken", "5.3.2")
+
+            // LuckPerms
+            modrinth("luckperms", "v5.5.17-bukkit")
+
+            // VaultUnlocked
+            modrinth("vaultunlocked", "2.17.0")
+
+            // XConomy (Economy Provider)
+            url("https://github.com/YiC200333/XConomy/releases/download/2.26.3/XConomy-Paper-2.26.3.jar")
         }
     }
     

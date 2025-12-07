@@ -36,6 +36,7 @@ public class GameManager {
         mvApi.getWorldManager().getWorld(mapName).peek(world -> {
              mvApi.getSafetyTeleporter().to(world.getSpawnLocation()).teleport(player);
              player.sendMessage("§aDeployed!");
+             plugin.getScoreboardManager().startCombat(player);
         }).onEmpty(() -> {
              player.sendMessage("§cMap world not found: " + mapName);
         });
@@ -46,6 +47,7 @@ public class GameManager {
 
         mvApi.getWorldManager().getWorld("lobby").peek(world -> {
             mvApi.getSafetyTeleporter().to(world.getSpawnLocation()).teleport(player);
+            plugin.getScoreboardManager().endCombat(player);
         });
     }
 }

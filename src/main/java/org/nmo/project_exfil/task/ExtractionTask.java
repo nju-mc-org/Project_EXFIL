@@ -10,6 +10,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.nmo.project_exfil.manager.GameManager;
+import org.nmo.project_exfil.util.DependencyHelper;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -51,6 +52,8 @@ public class ExtractionTask extends BukkitRunnable {
             if (extractionTimers.containsKey(player.getUniqueId())) {
                 extractionTimers.remove(player.getUniqueId());
                 player.sendTitle("", "§cExtraction Cancelled", 0, 20, 10);
+                DependencyHelper.removeExtractionHologram(player);
+                DependencyHelper.setExtractionHeader(player, false);
             }
         }
     }
@@ -61,11 +64,17 @@ public class ExtractionTask extends BukkitRunnable {
         
         if (timeLeft <= 0) {
             extractionTimers.remove(player.getUniqueId());
-            player.sendTitle("§aEXTRACTED", "", 0, 40, 10);
+            DependencyHelper.removeExtractionHologram(player);
+            DependencyHelper.setExtractionHeader(player, false);
+            
+            String subtitle = DependencyHelper.parsePlaceholders(player, "§7" + player.getName() + " made it out!");
+            player.sendTitle("§aEXTRACTED", subtitle, 0, 40, 10);
             gameManager.teleportToLobby(player);
         } else {
             extractionTimers.put(player.getUniqueId(), timeLeft);
             player.sendTitle("§aExtracting...", "§7" + timeLeft + " seconds", 0, 20, 0);
+            DependencyHelper.createExtractionHologram(player, timeLeft);
+            DependencyHelper.setExtractionHeader(player, true);
         }
     }
 }

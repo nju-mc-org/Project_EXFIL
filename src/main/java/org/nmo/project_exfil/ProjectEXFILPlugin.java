@@ -9,6 +9,9 @@ import org.nmo.project_exfil.manager.GameManager;
 import org.nmo.project_exfil.manager.RegionManager;
 import org.nmo.project_exfil.task.ExtractionTask;
 import org.nmo.project_exfil.ui.MapSelectionView;
+import org.nmo.project_exfil.manager.ScoreboardManager;
+import org.nmo.project_exfil.placeholder.ExfilExpansion;
+import org.nmo.project_exfil.util.DependencyHelper;
 
 public final class ProjectEXFILPlugin extends JavaPlugin {
     private static ProjectEXFILPlugin plugin = null;
@@ -17,6 +20,7 @@ public final class ProjectEXFILPlugin extends JavaPlugin {
     
     private GameManager gameManager;
     private RegionManager regionManager;
+    private ScoreboardManager scoreboardManager;
     private MapSelectionView mapSelectionView;
 
     /**
@@ -59,6 +63,7 @@ public final class ProjectEXFILPlugin extends JavaPlugin {
         // Initialize Managers
         this.gameManager = new GameManager(this);
         this.regionManager = new RegionManager(this);
+        this.scoreboardManager = new ScoreboardManager(this);
         
         // Initialize UI
         this.mapSelectionView = new MapSelectionView(gameManager);
@@ -68,6 +73,15 @@ public final class ProjectEXFILPlugin extends JavaPlugin {
         
         // Start Tasks
         new ExtractionTask(gameManager).runTaskTimer(this, 20L, 20L);
+        
+        // Register Placeholders
+        if (DependencyHelper.isPlaceholderAPIEnabled()) {
+            new ExfilExpansion(this).register();
+        }
+    }
+
+    public ScoreboardManager getScoreboardManager() {
+        return scoreboardManager;
     }
 
     /**
