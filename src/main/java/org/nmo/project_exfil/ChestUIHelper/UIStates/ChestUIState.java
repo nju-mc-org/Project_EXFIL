@@ -27,9 +27,7 @@ public abstract class ChestUIState {
      */
     public @NotNull Inventory getInventory() {
         return inventory;
-    }
-
-    /**
+    }  /**
      * Updates the inventory
      * @param elapsedTicks Number of ticks passed after last update
      * @return If there is a change in the state, specifically pop the state if a BackState is returned

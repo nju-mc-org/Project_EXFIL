@@ -1,0 +1,69 @@
+package org.nmo.project_exfil.manager;
+
+import com.alessiodp.parties.api.Parties;
+import com.alessiodp.parties.api.interfaces.PartiesAPI;
+import com.alessiodp.parties.api.interfaces.Party;
+import com.alessiodp.parties.api.interfaces.PartyPlayer;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.nmo.project_exfil.ProjectEXFILPlugin;
+
+import java.util.UUID;
+
+public class PartyManager {
+
+    private final ProjectEXFILPlugin plugin;
+    private PartiesAPI api;
+    private boolean enabled = false;
+
+    public PartyManager(ProjectEXFILPlugin plugin) {
+        this.plugin = plugin;
+        if (Bukkit.getPluginManager().getPlugin("Parties") != null && Bukkit.getPluginManager().getPlugin("Parties").isEnabled()) {
+            this.api = Parties.getApi();
+            this.enabled = true;
+        }
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public PartyPlayer getPartyPlayer(UUID uuid) {
+        if (!enabled) return null;
+        return api.getPartyPlayer(uuid);
+    }
+
+    public Party getParty(UUID partyId) {
+        if (!enabled) return null;
+        return api.getParty(partyId);
+    }
+
+    public boolean createParty(String name, PartyPlayer leader) {
+        if (!enabled) return false;
+        return api.createParty(name, leader);
+    }
+
+    public void deleteParty(Party party) {
+        if (!enabled) return;
+        party.delete();
+    }
+
+    public void removePlayerFromParty(PartyPlayer player) {
+        if (!enabled) return;
+        if (player.isInParty()) {
+            Party party = api.getParty(player.getPartyId());
+            if (party != null) {
+                party.removeMember(player);
+            }
+        }
+    }
+
+    public void invitePlayer(Party party, PartyPlayer target) {
+        if (!enabled) return;
+        party.invitePlayer(target);
+    }
+    
+    public PartiesAPI getApi() {
+        return api;
+    }
+}

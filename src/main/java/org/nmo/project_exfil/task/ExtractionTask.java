@@ -11,14 +11,22 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.nmo.project_exfil.manager.GameManager;
 import org.nmo.project_exfil.util.DependencyHelper;
+import org.nmo.project_exfil.ProjectEXFILPlugin;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.title.Title;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+import java.time.Duration;
 
 public class ExtractionTask extends BukkitRunnable {
 
     private final GameManager gameManager;
     private final Map<UUID, Integer> extractionTimers = new HashMap<>();
+    private final ProjectEXFILPlugin plugin = ProjectEXFILPlugin.getPlugin();
 
     public ExtractionTask(GameManager gameManager) {
         this.gameManager = gameManager;
@@ -51,7 +59,11 @@ public class ExtractionTask extends BukkitRunnable {
         if (!inExtractionZone) {
             if (extractionTimers.containsKey(player.getUniqueId())) {
                 extractionTimers.remove(player.getUniqueId());
-                player.sendTitle("", "§cExtraction Cancelled", 0, 20, 10);
+                
+                Title.Times times = Title.Times.times(Duration.ZERO, Duration.ofMillis(1000), Duration.ofMillis(500));
+                Title title = Title.title(Component.empty(), plugin.getLanguageManager().getMessage("exfil.extract.cancelled"), times);
+                player.showTitle(title);
+                
                 DependencyHelper.removeExtractionHologram(player);
                 DependencyHelper.setExtractionHeader(player, false);
             }
@@ -67,12 +79,20 @@ public class ExtractionTask extends BukkitRunnable {
             DependencyHelper.removeExtractionHologram(player);
             DependencyHelper.setExtractionHeader(player, false);
             
-            String subtitle = DependencyHelper.parsePlaceholders(player, "§7" + player.getName() + " made it out!");
-            player.sendTitle("§aEXTRACTED", subtitle, 0, 40, 10);
+            Component subComp = plugin.getLanguageManager().getMessage("exfil.extract.subtitle", Placeholder.unparsed("player", player.getName()));
+            
+            Title.Times times = Title.Times.times(Duration.ZERO, Duration.ofMillis(2000), Duration.ofMillis(500));
+            Title title = Title.title(plugin.getLanguageManager().getMessage("exfil.extract.title"), subComp, times);
+            player.showTitle(title);
+            
             gameManager.teleportToLobby(player);
         } else {
             extractionTimers.put(player.getUniqueId(), timeLeft);
-            player.sendTitle("§aExtracting...", "§7" + timeLeft + " seconds", 0, 20, 0);
+            
+            Title.Times times = Title.Times.times(Duration.ZERO, Duration.ofMillis(1000), Duration.ZERO);
+            Title title = Title.title(plugin.getLanguageManager().getMessage("exfil.extract.extracting"), plugin.getLanguageManager().getMessage("exfil.extract.seconds", Placeholder.unparsed("time", String.valueOf(timeLeft))), times);
+            player.showTitle(title);
+            
             DependencyHelper.createExtractionHologram(player, timeLeft);
             DependencyHelper.setExtractionHeader(player, true);
         }

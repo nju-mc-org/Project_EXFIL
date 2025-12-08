@@ -26,8 +26,7 @@ public abstract class ChestUIComponent {
         return 1;
     }
 
-    /**
-     * Returns the number of columns the component takes up
+    /**   * Returns the number of columns the component takes up
      * @return The number of columns the component takes up
      */
     Integer nCols() {
@@ -58,8 +57,7 @@ public abstract class ChestUIComponent {
      * The callback function when a component is clicked on
      * @param inventory The inventory that was clicked on
      * @param player The player that clicked on the component
-     * @param relRow The relative row of the component
-     * @param relCol The relative column of the component
+     * @param relRow The relative row of the component* @param relCol The relative column of the component
      */
     void onClick(@NotNull Inventory inventory, @NotNull Player player, @NotNull Integer relRow, @NotNull Integer relCol) {
         // Do nothing by default

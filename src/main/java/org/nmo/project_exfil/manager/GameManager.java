@@ -5,6 +5,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.nmo.project_exfil.ProjectEXFILPlugin;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+
 public class GameManager {
 
     private final ProjectEXFILPlugin plugin;
@@ -21,7 +25,7 @@ public class GameManager {
     }
 
     public void joinQueue(Player player, String mapName) {
-        player.sendMessage("§eDeploying to " + mapName + " in 5 seconds...");
+        plugin.getLanguageManager().send(player, "exfil.game.deploying", Placeholder.unparsed("map", mapName));
         
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             if (player.isOnline()) {
@@ -34,11 +38,11 @@ public class GameManager {
         if (mvApi == null) return;
         
         mvApi.getWorldManager().getWorld(mapName).peek(world -> {
-             mvApi.getSafetyTeleporter().to(world.getSpawnLocation()).teleport(player);
-             player.sendMessage("§aDeployed!");
-             plugin.getScoreboardManager().startCombat(player);
+              mvApi.getSafetyTeleporter().to(world.getSpawnLocation()).teleport(player);
+              plugin.getLanguageManager().send(player, "exfil.deploy");
+              plugin.getScoreboardManager().startCombat(player);
         }).onEmpty(() -> {
-             player.sendMessage("§cMap world not found: " + mapName);
+              plugin.getLanguageManager().send(player, "exfil.game.map_not_found", Placeholder.unparsed("map", mapName));
         });
     }
     
