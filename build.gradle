@@ -41,6 +41,10 @@ repositories {
         url = 'https://repo.extendedclip.com/releases/'
     }
     maven { url 'https://repo.codemc.io/repository/creatorfromhell/' }
+    maven {
+        name = "alessiodp-repo"
+        url = "https://repo.alessiodp.com/releases/"
+    }
 }
 
 dependencies {
@@ -82,6 +86,13 @@ dependencies {
 
     // XConomyAPI
     compileOnly "com.github.YiC200333:XConomyAPI:2.25.1"
+
+    // Parties
+    compileOnly group: 'com.alessiodp.parties', name: 'parties-api', version: '3.2.16'
+
+    // Adventure
+    compileOnly "net.kyori:adventure-api:4.19.0"
+    compileOnly "net.kyori:adventure-text-minimessage:4.19.0"
 }
 
 tasks {

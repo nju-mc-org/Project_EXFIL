@@ -6,24 +6,30 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.nmo.project_exfil.ProjectEXFILPlugin;
 import org.nmo.project_exfil.manager.RegionManager;
-import org.nmo.project_exfil.ui.MapSelectionView;
+import org.nmo.project_exfil.ui.MainMenuView;
+import org.nmo.project_exfil.ui.StashView;
+
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 
 public class ExfilCommand implements CommandExecutor {
 
     private final ProjectEXFILPlugin plugin;
     private final RegionManager regionManager;
-    private final MapSelectionView mapSelectionView;
+    private final MainMenuView mainMenuView;
+    private final StashView stashView;
 
-    public ExfilCommand(ProjectEXFILPlugin plugin, RegionManager regionManager, MapSelectionView mapSelectionView) {
+    public ExfilCommand(ProjectEXFILPlugin plugin, RegionManager regionManager, MainMenuView mainMenuView, StashView stashView) {
         this.plugin = plugin;
         this.regionManager = regionManager;
-        this.mapSelectionView = mapSelectionView;
+        this.mainMenuView = mainMenuView;
+        this.stashView = stashView;
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage("Players only.");
+            plugin.getLanguageManager().send(sender, "exfil.command.players_only");
             return true;
         }
 
@@ -31,17 +37,22 @@ public class ExfilCommand implements CommandExecutor {
 
         if (args.length == 0) {
             // Open UI
-            mapSelectionView.open(player);
+            mainMenuView.open(player);
+            return true;
+        }
+
+        if (args[0].equalsIgnoreCase("stash")) {
+            stashView.open(player);
             return true;
         }
 
         if (args[0].equalsIgnoreCase("setextract")) {
             if (!player.hasPermission("exfil.admin")) {
-                player.sendMessage("§cNo permission.");
+                plugin.getLanguageManager().send(player, "exfil.command.no_permission");
                 return true;
             }
             if (args.length < 2) {
-                player.sendMessage("§cUsage: /exfil setextract <name>");
+                plugin.getLanguageManager().send(player, "exfil.command.usage_setextract");
                 return true;
             }
             regionManager.saveExtractionPoint(player, args[1]);

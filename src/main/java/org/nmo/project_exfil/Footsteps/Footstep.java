@@ -1,4 +1,4 @@
-package org.nmo.project_exfil.Footsteps;
+package org.nmo.project_exfil.footsteps;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
