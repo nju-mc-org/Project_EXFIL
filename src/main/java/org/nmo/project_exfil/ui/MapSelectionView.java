@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.nmo.project_exfil.manager.GameManager;
+import org.nmo.project_exfil.manager.MapManager;
 
 import java.util.List;
 
@@ -32,37 +33,32 @@ public class MapSelectionView {
 
         StaticPane pane = new StaticPane(0, 0, 9, 3);
 
-        // Map A: Zero Dam
-        ItemStack zeroDamItem = new ItemStack(Material.MAP);
-        ItemMeta zeroDamMeta = zeroDamItem.getItemMeta();
-        zeroDamMeta.displayName(plugin.getLanguageManager().getMessage("exfil.map.zero_dam"));
-        zeroDamMeta.lore(List.of(
-            plugin.getLanguageManager().getMessage("exfil.map.difficulty").append(plugin.getLanguageManager().getMessage("exfil.map.difficulty.hard")),
-            plugin.getLanguageManager().getMessage("exfil.map.click_deploy")
-        ));
-        zeroDamItem.setItemMeta(zeroDamMeta);
+        List<MapManager.GameMap> maps = plugin.getMapManager().getMaps();
+        int x = 1;
+        int y = 1;
 
-        pane.addItem(new GuiItem(zeroDamItem, event -> {
-            plugin.getLanguageManager().send(player, "exfil.map.matchmaking", Placeholder.unparsed("map", "Zero Dam"));
-            gui.getInventory().close();
-            gameManager.joinQueue(player, "Zero-Dam");
-        }), 2, 1); // Slot 11 (row 2, col 3 -> x=2, y=1)
+        for (MapManager.GameMap map : maps) {
+            ItemStack item = new ItemStack(Material.MAP);
+            ItemMeta meta = item.getItemMeta();
+            meta.displayName(Component.text(map.getDisplayName()).color(NamedTextColor.YELLOW).decoration(TextDecoration.ITALIC, false));
+            meta.lore(List.of(
+                plugin.getLanguageManager().getMessage("exfil.map.click_deploy")
+            ));
+            item.setItemMeta(meta);
 
-        // Map B: Longbow Valley
-        ItemStack longbowItem = new ItemStack(Material.GRASS_BLOCK);
-        ItemMeta longbowMeta = longbowItem.getItemMeta();
-        longbowMeta.displayName(plugin.getLanguageManager().getMessage("exfil.map.longbow_valley"));
-        longbowMeta.lore(List.of(
-            plugin.getLanguageManager().getMessage("exfil.map.difficulty").append(plugin.getLanguageManager().getMessage("exfil.map.difficulty.normal")),
-            plugin.getLanguageManager().getMessage("exfil.map.click_deploy")
-        ));
-        longbowItem.setItemMeta(longbowMeta);
-
-        pane.addItem(new GuiItem(longbowItem, event -> {
-            plugin.getLanguageManager().send(player, "exfil.map.matchmaking", Placeholder.unparsed("map", "Longbow Valley"));
-            gui.getInventory().close();
-            gameManager.joinQueue(player, "Longbow-Valley");
-        }), 6, 1); // Slot 15 (row 2, col 7 -> x=6, y=1)
+            pane.addItem(new GuiItem(item, event -> {
+                plugin.getLanguageManager().send(player, "exfil.map.matchmaking", Placeholder.unparsed("map", map.getDisplayName()));
+                gui.getInventory().close();
+                gameManager.joinQueue(player, map.getTemplateName());
+            }), x, y);
+            
+            x++;
+            if (x > 7) {
+                x = 1;
+                y++;
+            }
+            if (y > 2) break;
+        }
 
         gui.addPane(pane);
         gui.show(player);

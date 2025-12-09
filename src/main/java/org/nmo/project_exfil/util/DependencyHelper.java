@@ -98,12 +98,15 @@ public class DependencyHelper {
             String holoName = "extract_" + player.getUniqueId();
             Location loc = player.getLocation().add(0, 2.5, 0);
             try {
-                if (eu.decentsoftware.holograms.api.DHAPI.getHologram(holoName) == null) {
+                eu.decentsoftware.holograms.api.holograms.Hologram hologram = eu.decentsoftware.holograms.api.DHAPI.getHologram(holoName);
+                if (hologram == null) {
                     List<String> lines = Arrays.asList("§aExtraction", "§e" + timeLeft + "s");
-                    eu.decentsoftware.holograms.api.DHAPI.createHologram(holoName, loc, lines);
+                    hologram = eu.decentsoftware.holograms.api.DHAPI.createHologram(holoName, loc, lines);
+                    hologram.setDefaultVisibleState(false);
+                    hologram.setShowPlayer(player);
                 } else {
-                    eu.decentsoftware.holograms.api.DHAPI.setHologramLine(eu.decentsoftware.holograms.api.DHAPI.getHologram(holoName), 1, "§e" + timeLeft + "s");
-                    eu.decentsoftware.holograms.api.DHAPI.moveHologram(eu.decentsoftware.holograms.api.DHAPI.getHologram(holoName), loc);
+                    eu.decentsoftware.holograms.api.DHAPI.setHologramLine(hologram, 1, "§e" + timeLeft + "s");
+                    eu.decentsoftware.holograms.api.DHAPI.moveHologram(hologram, loc);
                 }
             } catch (Exception e) {
                 e.printStackTrace();

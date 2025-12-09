@@ -1,4 +1,4 @@
-package org.nmo.project_exfil.ChestUIHelper.UIStates;
+package org.nmo.project_exfil.ui.framework.state;
 
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;

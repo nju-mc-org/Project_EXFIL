@@ -1,4 +1,4 @@
-package org.nmo.project_exfil.ChestUIHelper;
+package org.nmo.project_exfil.ui.framework;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -9,7 +9,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
-import org.nmo.project_exfil.ChestUIHelper.UIStates.ChestUIState;
+import org.nmo.project_exfil.ui.framework.state.ChestUIState;
 import org.nmo.project_exfil.ProjectEXFILPlugin;
 
 import java.util.ArrayList;

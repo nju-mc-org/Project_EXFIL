@@ -1,8 +1,15 @@
 package org.nmo.project_exfil.manager;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.nmo.project_exfil.ProjectEXFILPlugin;
+import org.nmo.project_exfil.integration.slime.SlimeWorldManagerIntegration;
+import org.nmo.project_exfil.manager.RegionManager.SpawnRegion;
+import org.nmo.project_exfil.manager.RegionManager.ExtractionRegion;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -66,36 +73,125 @@ public class GameManager {
         if (player.isOnline()) {
             instance.addPlayer(player);
             playerInstances.put(player.getUniqueId(), instance);
-            player.teleport(instance.getBukkitWorld().getSpawnLocation());
+            
+            Location spawnLoc = findValidSpawnLocation(instance);
+            if (spawnLoc == null) {
+                spawnLoc = instance.getBukkitWorld().getSpawnLocation();
+            }
+            
+            player.teleport(spawnLoc);
             plugin.getLanguageManager().send(player, "exfil.deploy");
             plugin.getScoreboardManager().startCombat(player);
         }
+    }
+
+    private Location findValidSpawnLocation(GameInstance instance) {
+        RegionManager regionManager = plugin.getRegionManager();
+        SpawnRegion spawnRegion = regionManager.getSpawnRegion(instance.getTemplateName());
+        
+        if (spawnRegion == null) {
+            return null;
+        }
+        
+        World world = instance.getBukkitWorld();
+        Map<String, ExtractionRegion> extractions = regionManager.getExtractionRegions(instance.getTemplateName());
+        
+        // Try 20 times to find a valid spot
+        for (int i = 0; i < 20; i++) {
+            double angle = Math.random() * 2 * Math.PI;
+            double dist = Math.random() * spawnRegion.radius;
+            double x = spawnRegion.x + dist * Math.cos(angle);
+            double z = spawnRegion.z + dist * Math.sin(angle);
+            
+            // Get highest block at x, z
+            int highestY = world.getHighestBlockYAt((int)x, (int)z);
+            Block blockUnder = world.getBlockAt((int)x, highestY, (int)z);
+            
+            // Check if the block is safe to stand on
+            if (!isSafeSpawnBlock(blockUnder)) {
+                continue;
+            }
+            
+            Location candidate = new Location(world, x, highestY + 1, z);
+            
+            if (isValidSpawn(candidate, instance, extractions)) {
+                return candidate;
+            }
+        }
+        
+        // Fallback: just return center (adjusted for Y)
+        int centerY = world.getHighestBlockYAt((int)spawnRegion.x, (int)spawnRegion.z);
+        return new Location(world, spawnRegion.x, centerY + 1, spawnRegion.z);
+    }
+    
+    private boolean isSafeSpawnBlock(Block block) {
+        if (block == null) return false;
+        Material type = block.getType();
+        
+        // Must be solid
+        if (!type.isSolid()) return false;
+        
+        // Must not be dangerous
+        if (type == Material.LAVA || type == Material.MAGMA_BLOCK || type == Material.CACTUS || type == Material.FIRE || type == Material.CAMPFIRE || type == Material.SOUL_CAMPFIRE || type == Material.SWEET_BERRY_BUSH) {
+            return false;
+        }
+        
+        // Prefer not leaves if possible, but for now allow them as they are standable.
+        // Avoid fences/walls/panes as they are annoying to spawn on? Bukkit handles Y adjustment usually but let's be safe.
+        
+        return true;
+    }
+    
+    private boolean isValidSpawn(Location loc, GameInstance instance, Map<String, ExtractionRegion> extractions) {
+        // Check distance to other players
+        for (UUID uuid : instance.getPlayers()) {
+            Player p = Bukkit.getPlayer(uuid);
+            if (p != null && p.getWorld().equals(loc.getWorld())) {
+                if (p.getLocation().distanceSquared(loc) < 400) { // 20 blocks
+                    return false;
+                }
+            }
+        }
+        
+        // Check distance to extraction points
+        for (ExtractionRegion region : extractions.values()) {
+            // Simple check: distance to center of extraction box
+            double centerX = region.box.getCenterX();
+            double centerZ = region.box.getCenterZ();
+            double distSq = Math.pow(loc.getX() - centerX, 2) + Math.pow(loc.getZ() - centerZ, 2);
+            if (distSq < 2500) { // 50 blocks
+                return false;
+            }
+        }
+        
+        return true;
     }
 
     public void teleportToMap(Player player, String mapName) {
         joinQueue(player, mapName);
     }
     
-    public void teleportToLobby(Player player) {
+    public void removePlayerFromGame(Player player) {
         GameInstance current = playerInstances.remove(player.getUniqueId());
         if (current != null) {
             current.removePlayer(player);
         }
+        plugin.getScoreboardManager().endCombat(player);
+    }
 
-        // Assuming lobby is a standard world or also managed by Slime
-        org.bukkit.World lobby = Bukkit.getWorld("lobby");
+    public void teleportToLobby(Player player) {
+        removePlayerFromGame(player);
+
+        // Use default world "world" as lobby
+        org.bukkit.World lobby = Bukkit.getWorld("world");
+        if (lobby == null && !Bukkit.getWorlds().isEmpty()) {
+            lobby = Bukkit.getWorlds().get(0);
+        }
+
         if (lobby != null) {
             player.teleport(lobby.getSpawnLocation());
-            plugin.getScoreboardManager().endCombat(player);
         } else {
-             slimeManager.loadWorld("lobby", true).thenAccept(instance -> {
-                Bukkit.getScheduler().runTask(plugin, () -> {
-                    if (player.isOnline()) {
-                        player.teleport(instance.getBukkitWorld().getSpawnLocation());
-                        plugin.getScoreboardManager().endCombat(player);
-                    }
-                });
-            });
+             plugin.getLogger().severe("Could not find main world 'world' to teleport player to lobby!");
         }
     }
     

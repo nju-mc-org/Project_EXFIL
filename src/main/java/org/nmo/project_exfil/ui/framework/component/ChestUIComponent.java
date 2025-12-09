@@ -1,4 +1,4 @@
-package org.nmo.project_exfil.ChestUIHelper.Components;
+package org.nmo.project_exfil.ui.framework.component;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;

@@ -1,4 +1,4 @@
-package org.nmo.project_exfil.manager;
+package org.nmo.project_exfil.integration.slime;
 
 import com.infernalsuite.asp.api.AdvancedSlimePaperAPI;
 import com.infernalsuite.asp.api.loaders.SlimeLoader;
@@ -63,7 +63,9 @@ public class SlimeWorldManagerIntegration {
     
     public CompletableFuture<SlimeWorldInstance> createInstance(String templateName) {
         CompletableFuture<SlimeWorldInstance> future = new CompletableFuture<>();
-        String instanceName = templateName + "_" + java.util.UUID.randomUUID().toString().substring(0, 8);
+        // Sanitize template name for instance name to ensure valid ResourceLocation
+        String sanitizedTemplate = templateName.toLowerCase().replaceAll("[^a-z0-9/._-]", "_");
+        String instanceName = sanitizedTemplate + "_" + java.util.UUID.randomUUID().toString().substring(0, 8);
 
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             try {
@@ -92,6 +94,17 @@ public class SlimeWorldManagerIntegration {
         });
         
         return future;
+    }
+
+    public CompletableFuture<Void> importVanillaWorld(File worldDir, String worldName) {
+        return CompletableFuture.runAsync(() -> {
+            try {
+                SlimeWorld world = asp.readVanillaWorld(worldDir, worldName, loader);
+                asp.saveWorld(world);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     public void unloadWorld(String worldName) {

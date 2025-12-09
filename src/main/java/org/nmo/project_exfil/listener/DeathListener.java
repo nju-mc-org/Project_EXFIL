@@ -27,7 +27,7 @@ public class DeathListener implements Listener {
         Player player = event.getEntity();
         World world = player.getWorld();
 
-        if (!world.getName().equalsIgnoreCase("lobby")) {
+        if (!world.getName().equalsIgnoreCase("world")) {
             // It's a raid world
             event.deathMessage(null);
             
@@ -44,10 +44,12 @@ public class DeathListener implements Listener {
     public void onPlayerRespawn(PlayerRespawnEvent event) {
         Player player = event.getPlayer();
         
-        if (!event.getRespawnLocation().getWorld().getName().equalsIgnoreCase("lobby")) {
-            World lobby = Bukkit.getWorld("lobby");
+        // Check if player is currently in a game instance
+        if (gameManager.getPlayerInstance(player) != null) {
+            World lobby = Bukkit.getWorld("world");
             if (lobby != null) {
                 event.setRespawnLocation(lobby.getSpawnLocation());
+                gameManager.removePlayerFromGame(player);
                 player.sendMessage("§eReturned to lobby.");
             }
         }
