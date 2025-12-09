@@ -9,6 +9,7 @@ import org.nmo.project_exfil.manager.PartyManager;
 import org.nmo.project_exfil.manager.RegionManager;
 import org.nmo.project_exfil.manager.StashManager;
 import org.nmo.project_exfil.manager.LanguageManager;
+import org.nmo.project_exfil.manager.MapManager;
 import org.nmo.project_exfil.task.ExtractionTask;
 import org.nmo.project_exfil.ui.MapSelectionView;
 import org.nmo.project_exfil.ui.MainMenuView;
@@ -18,6 +19,7 @@ import org.nmo.project_exfil.manager.ScoreboardManager;
 import org.nmo.project_exfil.placeholder.ExfilExpansion;
 import org.nmo.project_exfil.util.DependencyHelper;
 
+import org.nmo.project_exfil.listener.ConnectionListener;
 import org.nmo.project_exfil.listener.DeathListener;
 
 public final class ProjectEXFILPlugin extends JavaPlugin {
@@ -29,6 +31,7 @@ public final class ProjectEXFILPlugin extends JavaPlugin {
     private ScoreboardManager scoreboardManager;
     private PartyManager partyManager;
     private StashManager stashManager;
+    private MapManager mapManager;
     private LanguageManager languageManager;
     private MapSelectionView mapSelectionView;
     private MainMenuView mainMenuView;
@@ -67,6 +70,7 @@ public final class ProjectEXFILPlugin extends JavaPlugin {
         this.scoreboardManager = new ScoreboardManager(this);
         this.partyManager = new PartyManager(this);
         this.stashManager = new StashManager(this);
+        this.mapManager = new MapManager(this);
         this.languageManager = new LanguageManager(this);
         
         // Initialize UI
@@ -77,10 +81,13 @@ public final class ProjectEXFILPlugin extends JavaPlugin {
         this.mainMenuView.setTeamMenuView(teamMenuView);
         
         // Register Commands
-        getCommand("exfil").setExecutor(new ExfilCommand(this, regionManager, mainMenuView, stashView));
+        ExfilCommand exfilCommand = new ExfilCommand(this, regionManager, mapManager, mainMenuView, stashView);
+        getCommand("exfil").setExecutor(exfilCommand);
+        getCommand("exfil").setTabCompleter(exfilCommand);
         
         // Register Listeners
         getServer().getPluginManager().registerEvents(new DeathListener(this, gameManager), this);
+        getServer().getPluginManager().registerEvents(new ConnectionListener(gameManager), this);
         
         // Start Tasks
         new ExtractionTask(gameManager, regionManager).runTaskTimer(this, 20L, 20L);
@@ -101,6 +108,14 @@ public final class ProjectEXFILPlugin extends JavaPlugin {
 
     public LanguageManager getLanguageManager() {
         return languageManager;
+    }
+
+    public MapManager getMapManager() {
+        return mapManager;
+    }
+
+    public RegionManager getRegionManager() {
+        return regionManager;
     }
 
     /**

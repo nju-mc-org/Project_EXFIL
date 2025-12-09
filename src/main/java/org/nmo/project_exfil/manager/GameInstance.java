@@ -45,8 +45,14 @@ public class GameInstance {
 
     public void removePlayer(Player player) {
         players.remove(player.getUniqueId());
-        // Logic to end game if empty? Or keep running until time?
-        // For now, keep running to allow reconnects or new joins within window
+        
+        // If no players left and game has started (or even if waiting), unload it to save resources
+        if (players.isEmpty()) {
+            // Schedule unload with a small delay to allow for immediate reconnects if needed, 
+            // but user requested deletion if "eventually no players".
+            // Delay is crucial to ensure player has fully left the world context before unloading
+            Bukkit.getScheduler().runTaskLater(ProjectEXFILPlugin.getPlugin(), this::endGame, 40L);
+        }
     }
 
     public void checkTime() {

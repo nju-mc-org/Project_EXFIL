@@ -32,6 +32,8 @@ public class ScoreboardManager {
 
     public void endCombat(Player player) {
         combatStartTimes.remove(player.getUniqueId());
+        // Force update to clear the timer immediately
+        updateScoreboard(player);
     }
 
     private void startScoreboardTask() {

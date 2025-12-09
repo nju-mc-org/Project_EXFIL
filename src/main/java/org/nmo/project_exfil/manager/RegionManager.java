@@ -24,6 +24,7 @@ public class RegionManager {
 
     private final ProjectEXFILPlugin plugin;
     private final Map<String, ExtractionRegion> regions = new HashMap<>();
+    private final Map<String, SpawnRegion> spawnRegions = new HashMap<>();
     private final File regionsFile;
     private YamlConfiguration regionsConfig;
 
@@ -44,19 +45,32 @@ public class RegionManager {
         regionsConfig = YamlConfiguration.loadConfiguration(regionsFile);
         
         ConfigurationSection section = regionsConfig.getConfigurationSection("regions");
-        if (section == null) return;
-        
-        for (String key : section.getKeys(false)) {
-            String worldName = section.getString(key + ".world");
-            double minX = section.getDouble(key + ".minX");
-            double minY = section.getDouble(key + ".minY");
-            double minZ = section.getDouble(key + ".minZ");
-            double maxX = section.getDouble(key + ".maxX");
-            double maxY = section.getDouble(key + ".maxY");
-            double maxZ = section.getDouble(key + ".maxZ");
-            
-            BoundingBox box = new BoundingBox(minX, minY, minZ, maxX, maxY, maxZ);
-            regions.put(key, new ExtractionRegion(worldName, box));
+        if (section != null) {
+            for (String key : section.getKeys(false)) {
+                String worldName = section.getString(key + ".world");
+                double minX = section.getDouble(key + ".minX");
+                double minY = section.getDouble(key + ".minY");
+                double minZ = section.getDouble(key + ".minZ");
+                double maxX = section.getDouble(key + ".maxX");
+                double maxY = section.getDouble(key + ".maxY");
+                double maxZ = section.getDouble(key + ".maxZ");
+                
+                BoundingBox box = new BoundingBox(minX, minY, minZ, maxX, maxY, maxZ);
+                regions.put(key, new ExtractionRegion(worldName, box));
+            }
+        }
+
+        ConfigurationSection spawnSection = regionsConfig.getConfigurationSection("spawns");
+        if (spawnSection != null) {
+            for (String key : spawnSection.getKeys(false)) {
+                String worldName = spawnSection.getString(key + ".world");
+                double x = spawnSection.getDouble(key + ".x");
+                double y = spawnSection.getDouble(key + ".y");
+                double z = spawnSection.getDouble(key + ".z");
+                double radius = spawnSection.getDouble(key + ".radius");
+                
+                spawnRegions.put(worldName, new SpawnRegion(worldName, x, y, z, radius));
+            }
         }
     }
 
@@ -74,6 +88,18 @@ public class RegionManager {
             regionsConfig.set("regions." + key + ".maxX", box.getMaxX());
             regionsConfig.set("regions." + key + ".maxY", box.getMaxY());
             regionsConfig.set("regions." + key + ".maxZ", box.getMaxZ());
+        }
+
+        regionsConfig.set("spawns", null);
+        for (Map.Entry<String, SpawnRegion> entry : spawnRegions.entrySet()) {
+            String key = entry.getKey(); // Use world name as key for spawns
+            SpawnRegion region = entry.getValue();
+            
+            regionsConfig.set("spawns." + key + ".world", region.worldName);
+            regionsConfig.set("spawns." + key + ".x", region.x);
+            regionsConfig.set("spawns." + key + ".y", region.y);
+            regionsConfig.set("spawns." + key + ".z", region.z);
+            regionsConfig.set("spawns." + key + ".radius", region.radius);
         }
         
         try {
@@ -135,13 +161,60 @@ public class RegionManager {
         return null;
     }
 
-    private static class ExtractionRegion {
-        String worldName;
-        BoundingBox box;
+    public void saveSpawnRegion(Player admin, double radius) {
+        String worldName = admin.getWorld().getName();
+        Location loc = admin.getLocation();
+        spawnRegions.put(worldName, new SpawnRegion(worldName, loc.getX(), loc.getY(), loc.getZ(), radius));
+        saveRegions();
+        plugin.getLanguageManager().send(admin, "exfil.region.spawn_saved", Placeholder.unparsed("radius", String.valueOf(radius)));
+    }
+
+    public SpawnRegion getSpawnRegion(String templateWorldName) {
+        return spawnRegions.get(templateWorldName);
+    }
+    
+    public Map<String, ExtractionRegion> getExtractionRegions(String templateWorldName) {
+        Map<String, ExtractionRegion> result = new HashMap<>();
+        for (Map.Entry<String, ExtractionRegion> entry : regions.entrySet()) {
+            if (entry.getValue().worldName.equals(templateWorldName)) {
+                result.put(entry.getKey(), entry.getValue());
+            }
+        }
+        return result;
+    }
+
+    public boolean deleteExtractionRegion(String name) {
+        if (regions.remove(name) != null) {
+            saveRegions();
+            return true;
+        }
+        return false;
+    }
+
+    public Map<String, ExtractionRegion> getAllExtractionRegions() {
+        return regions;
+    }
+
+    public static class ExtractionRegion {
+        public String worldName;
+        public BoundingBox box;
         
         ExtractionRegion(String worldName, BoundingBox box) {
             this.worldName = worldName;
             this.box = box;
+        }
+    }
+
+    public static class SpawnRegion {
+        public String worldName;
+        public double x, y, z, radius;
+
+        public SpawnRegion(String worldName, double x, double y, double z, double radius) {
+            this.worldName = worldName;
+            this.x = x;
+            this.y = y;
+            this.z = z;
+            this.radius = radius;
         }
     }
 }
