@@ -1,15 +1,12 @@
 package org.nmo.project_exfil.task;
 
-import com.sk89q.worldedit.bukkit.BukkitAdapter;
-import com.sk89q.worldguard.WorldGuard;
-import com.sk89q.worldguard.protection.regions.ProtectedRegion;
-import com.sk89q.worldguard.protection.regions.RegionContainer;
-import com.sk89q.worldguard.protection.regions.RegionQuery;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.nmo.project_exfil.manager.GameInstance;
 import org.nmo.project_exfil.manager.GameManager;
+import org.nmo.project_exfil.manager.RegionManager;
 import org.nmo.project_exfil.util.DependencyHelper;
 import org.nmo.project_exfil.ProjectEXFILPlugin;
 import java.util.HashMap;
@@ -25,11 +22,13 @@ import java.time.Duration;
 public class ExtractionTask extends BukkitRunnable {
 
     private final GameManager gameManager;
+    private final RegionManager regionManager;
     private final Map<UUID, Integer> extractionTimers = new HashMap<>();
     private final ProjectEXFILPlugin plugin = ProjectEXFILPlugin.getPlugin();
 
-    public ExtractionTask(GameManager gameManager) {
+    public ExtractionTask(GameManager gameManager, RegionManager regionManager) {
         this.gameManager = gameManager;
+        this.regionManager = regionManager;
     }
 
     @Override
@@ -40,23 +39,14 @@ public class ExtractionTask extends BukkitRunnable {
     }
 
     private void checkExtraction(Player player) {
-        Location loc = player.getLocation();
-        RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
-        RegionQuery query = container.createQuery();
+        GameInstance instance = gameManager.getPlayerInstance(player);
+        if (instance == null) return;
         
-        var set = query.getApplicableRegions(BukkitAdapter.adapt(loc));
-        boolean inExtractionZone = false;
+        boolean inExtractionZone = regionManager.isPlayerInExtractionPoint(player, instance.getTemplateName());
 
-        for (ProtectedRegion region : set) {
-            // Check if region ID starts with "extract_"
-            if (region.getId().toLowerCase().startsWith("extract_")) {
-                inExtractionZone = true;
-                handleExtractionProcess(player);
-                break;
-            }
-        }
-
-        if (!inExtractionZone) {
+        if (inExtractionZone) {
+            handleExtractionProcess(player);
+        } else {
             if (extractionTimers.containsKey(player.getUniqueId())) {
                 extractionTimers.remove(player.getUniqueId());
                 

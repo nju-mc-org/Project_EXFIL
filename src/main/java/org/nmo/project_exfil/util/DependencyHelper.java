@@ -29,9 +29,6 @@ public class DependencyHelper {
         return Bukkit.getPluginManager().isPluginEnabled("XConomy");
     }
 
-    public static boolean isMultiverseCoreEnabled() {
-        return Bukkit.getPluginManager().isPluginEnabled("Multiverse-Core");
-    }
 
     // PlaceholderAPI Usage
     public static String parsePlaceholders(Player player, String text) {
@@ -84,7 +81,7 @@ public class DependencyHelper {
         return java.math.BigDecimal.ZERO;
     }
 
-    // Multiverse-Core Usage
+    // World Alias Usage
     public static String getWorldAlias(org.bukkit.World world) {
         return world.getName();
     }

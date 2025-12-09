@@ -1,12 +1,12 @@
 name: Project_EXFIL
 version: '1.14.514'
 main: org.nmo.project_exfil.ProjectEXFILPlugin
-api-version: '1.21.6'
+api-version: '1.21'
 authors: [ NJU Minecraft Organization, Kingcq ]
 description: Tarkov-like game in Minecraft, a simple paper plugin
 website: nmo.net.cn
-depend: [FastAsyncWorldEdit, WorldGuard, Multiverse-Core]
-softdepend: [PlaceholderAPI, DecentHologramsDHAPI, TAB, Vault, LuckPerms, XConomy, Parties]
+depend: [FastAsyncWorldEdit]
+softdepend: [PlaceholderAPI, DecentHolograms, TAB, Vault, LuckPerms, XConomy, Parties]
 commands:
   exfil:
     description: Main command for Project EXFIL

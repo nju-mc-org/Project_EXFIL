@@ -83,12 +83,16 @@ public final class ProjectEXFILPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new DeathListener(this, gameManager), this);
         
         // Start Tasks
-        new ExtractionTask(gameManager).runTaskTimer(this, 20L, 20L);
+        new ExtractionTask(gameManager, regionManager).runTaskTimer(this, 20L, 20L);
         
         // Register Placeholders
         if (DependencyHelper.isPlaceholderAPIEnabled()) {
             new ExfilExpansion(this).register();
         }
+    }
+
+    public GameManager getGameManager() {
+        return gameManager;
     }
 
     public ScoreboardManager getScoreboardManager() {

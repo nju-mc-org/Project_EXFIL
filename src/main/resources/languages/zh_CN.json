@@ -51,6 +51,8 @@
   "exfil.region.incomplete": "<red>你没有选择完整的区域! 请使用魔杖.",
   "exfil.region.saved": "<green>已保存撤离点 (WG区域): <name>",
   "exfil.game.deploying": "<yellow>将在 5 秒后部署至 <map>...",
+  "exfil.game.creating_instance": "<yellow>正在创建新的游戏实例...",
+  "exfil.game.ended": "<red>游戏结束! 返回大厅...",
   "exfil.game.map_not_found": "<red>未找到地图世界: <map>",
   "exfil.extract.cancelled": "<red>撤离已取消",
   "exfil.extract.subtitle": "<gray><player> 成功撤离!",
