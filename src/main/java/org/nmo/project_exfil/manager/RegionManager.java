@@ -134,7 +134,8 @@ public class RegionManager {
             selection.getMaximumPoint().z()
         );
         
-        regions.put(name, new ExtractionRegion(admin.getWorld().getName(), box));
+        String worldName = plugin.getGameManager().getTemplateName(admin.getWorld());
+        regions.put(name, new ExtractionRegion(worldName, box));
         saveRegions();
         
         plugin.getLanguageManager().send(admin, "exfil.region.saved", Placeholder.unparsed("name", name));
@@ -162,7 +163,7 @@ public class RegionManager {
     }
 
     public void saveSpawnRegion(Player admin, double radius) {
-        String worldName = admin.getWorld().getName();
+        String worldName = plugin.getGameManager().getTemplateName(admin.getWorld());
         Location loc = admin.getLocation();
         spawnRegions.put(worldName, new SpawnRegion(worldName, loc.getX(), loc.getY(), loc.getZ(), radius));
         saveRegions();

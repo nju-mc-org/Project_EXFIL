@@ -214,4 +214,15 @@ public class GameManager {
     public SlimeWorldManagerIntegration getSlimeManager() {
         return slimeManager;
     }
+
+    public String getTemplateName(World world) {
+        for (List<GameInstance> instances : activeInstances.values()) {
+            for (GameInstance instance : instances) {
+                if (instance.getBukkitWorld().equals(world)) {
+                    return instance.getTemplateName();
+                }
+            }
+        }
+        return world.getName();
+    }
 }

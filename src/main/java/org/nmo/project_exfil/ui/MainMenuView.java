@@ -18,6 +18,7 @@ import org.nmo.project_exfil.manager.PartyManager;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.nmo.project_exfil.ProjectEXFILPlugin;
 
@@ -40,11 +41,12 @@ public class MainMenuView {
     }
 
     public void open(Player player) {
-        ChestGui gui = new ChestGui(3, "Main Menu");
+        ChestGui gui = new ChestGui(5, "Main Menu - EXFIL");
         gui.setOnGlobalClick(event -> event.setCancelled(true));
 
-        StaticPane pane = new StaticPane(0, 0, 9, 3);
+        StaticPane pane = new StaticPane(0, 0, 9, 5);
 
+        // 第一行 - 主要功能
         // Deploy Button
         ItemStack deployItem = new ItemStack(Material.IRON_SWORD);
         ItemMeta deployMeta = deployItem.getItemMeta();
@@ -54,7 +56,7 @@ public class MainMenuView {
 
         pane.addItem(new GuiItem(deployItem, event -> {
             mapSelectionView.open(player);
-        }), 2, 1);
+        }), 1, 1);
 
         // Team Button
         ItemStack teamItem = new ItemStack(Material.PLAYER_HEAD);
@@ -87,7 +89,7 @@ public class MainMenuView {
             } else {
                 openPartiesInterface(player);
             }
-        }), 6, 1);
+        }), 4, 1);
 
         // Stash Button
         ItemStack stashItem = new ItemStack(Material.CHEST);
@@ -99,7 +101,7 @@ public class MainMenuView {
         pane.addItem(new GuiItem(stashItem, event -> {
             gui.getInventory().close();
             stashView.open(player);
-        }), 4, 1);
+        }), 7, 1);
 
         gui.addPane(pane);
         gui.show(player);
