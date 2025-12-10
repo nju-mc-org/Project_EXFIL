@@ -16,11 +16,14 @@ import org.nmo.project_exfil.ui.MainMenuView;
 import org.nmo.project_exfil.ui.TeamMenuView;
 import org.nmo.project_exfil.ui.StashView;
 import org.nmo.project_exfil.manager.ScoreboardManager;
+import org.nmo.project_exfil.manager.ReviveManager;
 import org.nmo.project_exfil.placeholder.ExfilExpansion;
 import org.nmo.project_exfil.util.DependencyHelper;
 
 import org.nmo.project_exfil.listener.ConnectionListener;
 import org.nmo.project_exfil.listener.DeathListener;
+import org.nmo.project_exfil.listener.LobbyListener;
+import org.nmo.project_exfil.listener.ReviveListener;
 
 public final class ProjectEXFILPlugin extends JavaPlugin {
     private static ProjectEXFILPlugin plugin = null;
@@ -33,6 +36,7 @@ public final class ProjectEXFILPlugin extends JavaPlugin {
     private StashManager stashManager;
     private MapManager mapManager;
     private LanguageManager languageManager;
+    private ReviveManager reviveManager;
     private MapSelectionView mapSelectionView;
     private MainMenuView mainMenuView;
     private TeamMenuView teamMenuView;
@@ -72,6 +76,7 @@ public final class ProjectEXFILPlugin extends JavaPlugin {
         this.stashManager = new StashManager(this);
         this.mapManager = new MapManager(this);
         this.languageManager = new LanguageManager(this);
+        this.reviveManager = new ReviveManager(this);
         
         // Initialize UI
         this.mapSelectionView = new MapSelectionView(gameManager);
@@ -88,6 +93,8 @@ public final class ProjectEXFILPlugin extends JavaPlugin {
         // Register Listeners
         getServer().getPluginManager().registerEvents(new DeathListener(this, gameManager), this);
         getServer().getPluginManager().registerEvents(new ConnectionListener(gameManager), this);
+        getServer().getPluginManager().registerEvents(new LobbyListener(), this);
+        getServer().getPluginManager().registerEvents(new ReviveListener(this, reviveManager, gameManager), this);
         
         // Start Tasks
         new ExtractionTask(gameManager, regionManager).runTaskTimer(this, 20L, 20L);
@@ -106,6 +113,10 @@ public final class ProjectEXFILPlugin extends JavaPlugin {
         return scoreboardManager;
     }
 
+    public PartyManager getPartyManager() {
+        return partyManager;
+    }
+
     public LanguageManager getLanguageManager() {
         return languageManager;
     }
@@ -116,6 +127,10 @@ public final class ProjectEXFILPlugin extends JavaPlugin {
 
     public RegionManager getRegionManager() {
         return regionManager;
+    }
+
+    public ReviveManager getReviveManager() {
+        return reviveManager;
     }
 
     /**
