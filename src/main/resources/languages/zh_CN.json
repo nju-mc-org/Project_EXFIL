@@ -7,6 +7,7 @@
   "exfil.stash_saved": "<green>仓库已保存.",
   "exfil.party_create": "<green>战术小队已建立!",
   "exfil.party_invite": "<green>已邀请 <player> 加入小队.",
+  "exfil.party_full": "<red>小队已满 (最多3人).",
   "exfil.party_kick": "<red>已将 <player> 踢出小队.",
   "exfil.party_leave": "<red>你离开了小队.",
   "exfil.party_disband": "<red>小队已解散.",

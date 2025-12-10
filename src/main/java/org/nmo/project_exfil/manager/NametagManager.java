@@ -84,6 +84,11 @@ public class NametagManager {
         packet.getStrings().write(0, teamName);
         packet.getIntegers().write(0, 0); // Mode 0: Create
 
+        // Disable Friendly Fire (Options: 0x00 = Off, 0x01 = On, 0x02 = See Invisible)
+        if (packet.getIntegers().size() > 1) {
+            packet.getIntegers().write(1, 0);
+        }
+
         // Set Color
         try {
             if (packet.getSpecificModifier(ChatFormatting.class).size() > 0) {

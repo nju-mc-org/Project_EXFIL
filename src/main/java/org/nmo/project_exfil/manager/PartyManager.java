@@ -58,9 +58,13 @@ public class PartyManager {
         }
     }
 
-    public void invitePlayer(Party party, PartyPlayer target) {
-        if (!enabled) return;
+    public boolean invitePlayer(Party party, PartyPlayer target) {
+        if (!enabled) return false;
+        if (party.getMembers().size() >= 3) {
+            return false;
+        }
         party.invitePlayer(target);
+        return true;
     }
     
     public PartiesAPI getApi() {

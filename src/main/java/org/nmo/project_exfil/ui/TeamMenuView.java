@@ -107,7 +107,7 @@ public class TeamMenuView {
         // Or 5 slots: 11, 12, 13, 14, 15
         
         // Max party size usually 5 for FPS squads? Let's assume 5.
-        int[] slots = {11, 12, 13, 14, 15};
+        int[] slots = {12, 13, 14};
         
         for (int i = 0; i < slots.length; i++) {
             if (i < members.size()) {

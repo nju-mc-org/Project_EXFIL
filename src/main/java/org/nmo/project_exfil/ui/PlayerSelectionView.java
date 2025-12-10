@@ -76,8 +76,11 @@ public class PlayerSelectionView {
                 if (inviter != null && inviter.isInParty()) {
                     Party party = partyManager.getParty(inviter.getPartyId());
                     if (party != null) {
-                        partyManager.invitePlayer(party, partyPlayer);
-                        plugin.getLanguageManager().send(player, "exfil.party_invite", Placeholder.unparsed("player", onlinePlayer.getName()));
+                        if (partyManager.invitePlayer(party, partyPlayer)) {
+                            plugin.getLanguageManager().send(player, "exfil.party_invite", Placeholder.unparsed("player", onlinePlayer.getName()));
+                        } else {
+                            plugin.getLanguageManager().send(player, "exfil.party_full");
+                        }
                     }
                 }
                 
