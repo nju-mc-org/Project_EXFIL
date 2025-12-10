@@ -17,6 +17,7 @@ import org.nmo.project_exfil.ui.TeamMenuView;
 import org.nmo.project_exfil.ui.StashView;
 import org.nmo.project_exfil.manager.ScoreboardManager;
 import org.nmo.project_exfil.manager.ReviveManager;
+import org.nmo.project_exfil.manager.NametagManager;
 import org.nmo.project_exfil.placeholder.ExfilExpansion;
 import org.nmo.project_exfil.util.DependencyHelper;
 
@@ -37,6 +38,7 @@ public final class ProjectEXFILPlugin extends JavaPlugin {
     private MapManager mapManager;
     private LanguageManager languageManager;
     private ReviveManager reviveManager;
+    private NametagManager nametagManager;
     private MapSelectionView mapSelectionView;
     private MainMenuView mainMenuView;
     private TeamMenuView teamMenuView;
@@ -77,6 +79,7 @@ public final class ProjectEXFILPlugin extends JavaPlugin {
         this.mapManager = new MapManager(this);
         this.languageManager = new LanguageManager(this);
         this.reviveManager = new ReviveManager(this);
+        this.nametagManager = new NametagManager(this);
         
         // Initialize UI
         this.mapSelectionView = new MapSelectionView(gameManager);
@@ -131,6 +134,10 @@ public final class ProjectEXFILPlugin extends JavaPlugin {
 
     public ReviveManager getReviveManager() {
         return reviveManager;
+    }
+
+    public NametagManager getNametagManager() {
+        return nametagManager;
     }
 
     /**

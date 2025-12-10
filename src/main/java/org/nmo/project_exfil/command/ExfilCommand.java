@@ -91,7 +91,7 @@ public class ExfilCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        if (args[0].equalsIgnoreCase("importmap")) {
+        if (args[0].equalsIgnoreCase("set")) {
             if (!player.hasPermission("exfil.admin")) {
                 plugin.getLanguageManager().send(player, "exfil.command.no_permission");
                 return true;
