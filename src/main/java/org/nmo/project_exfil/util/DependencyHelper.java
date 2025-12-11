@@ -4,6 +4,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
+import org.nmo.project_exfil.ProjectEXFILPlugin;
+import org.nmo.project_exfil.manager.LanguageManager;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -48,6 +52,18 @@ public class DependencyHelper {
     public static void removeExtractionHologram(Player player) {
         if (isDecentHologramsEnabled()) {
             DecentHologramsHook.remove(player);
+        }
+    }
+
+    public static void createStaticExtractionHologram(String name, Location loc) {
+        if (isDecentHologramsEnabled()) {
+            DecentHologramsHook.createStatic(name, loc);
+        }
+    }
+
+    public static void removeStaticExtractionHologram(String name) {
+        if (isDecentHologramsEnabled()) {
+            DecentHologramsHook.removeStatic(name);
         }
     }
 
@@ -97,10 +113,13 @@ public class DependencyHelper {
         static void create(Player player, int timeLeft) {
             String holoName = "extract_" + player.getUniqueId();
             Location loc = player.getLocation().add(0, 2.5, 0);
+            LanguageManager lang = ProjectEXFILPlugin.getPlugin().getLanguageManager();
+            String title = LegacyComponentSerializer.legacySection().serialize(lang.getMessage("exfil.hologram.extraction.extracting"));
+            
             try {
                 eu.decentsoftware.holograms.api.holograms.Hologram hologram = eu.decentsoftware.holograms.api.DHAPI.getHologram(holoName);
                 if (hologram == null) {
-                    List<String> lines = Arrays.asList("§aExtraction", "§e" + timeLeft + "s");
+                    List<String> lines = Arrays.asList(title, "§e" + timeLeft + "s");
                     hologram = eu.decentsoftware.holograms.api.DHAPI.createHologram(holoName, loc, lines);
                     hologram.setDefaultVisibleState(false);
                     hologram.setShowPlayer(player);
@@ -123,6 +142,37 @@ public class DependencyHelper {
                 e.printStackTrace();
             }
         }
+
+        static void createStatic(String name, Location loc) {
+            // Sanitize name for hologram ID (alphanumeric, underscores, dashes only)
+            String safeName = name.replaceAll("[^a-zA-Z0-9_\\-]", "_");
+            String holoName = "exfil_static_" + safeName;
+            LanguageManager lang = ProjectEXFILPlugin.getPlugin().getLanguageManager();
+            String title = LegacyComponentSerializer.legacySection().serialize(lang.getMessage("exfil.hologram.extraction.title"));
+            
+            try {
+                eu.decentsoftware.holograms.api.holograms.Hologram hologram = eu.decentsoftware.holograms.api.DHAPI.getHologram(holoName);
+                if (hologram != null) {
+                    eu.decentsoftware.holograms.api.DHAPI.removeHologram(holoName);
+                }
+                List<String> lines = Arrays.asList(title, "§e" + name);
+                eu.decentsoftware.holograms.api.DHAPI.createHologram(holoName, loc, lines);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        static void removeStatic(String name) {
+            String safeName = name.replaceAll("[^a-zA-Z0-9_\\-]", "_");
+            String holoName = "exfil_static_" + safeName;
+            try {
+                if (eu.decentsoftware.holograms.api.DHAPI.getHologram(holoName) != null) {
+                    eu.decentsoftware.holograms.api.DHAPI.removeHologram(holoName);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private static class TABHook {
@@ -131,7 +181,9 @@ public class DependencyHelper {
                 me.neznamy.tab.api.TabPlayer tabPlayer = me.neznamy.tab.api.TabAPI.getInstance().getPlayer(player.getUniqueId());
                 if (tabPlayer != null && me.neznamy.tab.api.TabAPI.getInstance().getHeaderFooterManager() != null) {
                     if (extracting) {
-                        me.neznamy.tab.api.TabAPI.getInstance().getHeaderFooterManager().setHeader(tabPlayer, "§c§lEXTRACTING...");
+                        LanguageManager lang = ProjectEXFILPlugin.getPlugin().getLanguageManager();
+                        String header = LegacyComponentSerializer.legacySection().serialize(lang.getMessage("exfil.tab.extracting"));
+                        me.neznamy.tab.api.TabAPI.getInstance().getHeaderFooterManager().setHeader(tabPlayer, header);
                     } else {
                         me.neznamy.tab.api.TabAPI.getInstance().getHeaderFooterManager().setHeader(tabPlayer, "");
                     }

@@ -48,6 +48,7 @@ repositories {
         name = "alessiodp-repo"
         url = "https://repo.alessiodp.com/releases/"
     }
+
 }
 
 dependencies {
@@ -108,6 +109,8 @@ dependencies {
 
     // Sentinel
     compileOnly 'org.mcmonkey:sentinel:2.9.2-SNAPSHOT'
+
+
 }
 
 tasks {

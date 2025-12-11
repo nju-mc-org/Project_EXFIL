@@ -4,8 +4,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.nmo.project_exfil.ProjectEXFILPlugin;
+import org.nmo.project_exfil.manager.gamemodule.*;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -16,6 +19,7 @@ public class GameInstance {
     private final World bukkitWorld;
     private final long startTime;
     private final Set<UUID> players = new HashSet<>();
+    private final List<GameModule> modules = new ArrayList<>();
     private GameState state;
     
     // Configurable settings (could be passed in)
@@ -28,6 +32,16 @@ public class GameInstance {
         this.bukkitWorld = bukkitWorld;
         this.startTime = System.currentTimeMillis();
         this.state = GameState.WAITING;
+        
+        registerModules();
+        modules.forEach(m -> m.onStart(this));
+    }
+
+    private void registerModules() {
+        modules.add(new NPCModule());
+        modules.add(new HologramModule());
+        modules.add(new BossBarModule());
+        modules.add(new BoundaryModule());
     }
 
     public boolean canJoin() {
@@ -41,10 +55,14 @@ public class GameInstance {
         if (state == GameState.WAITING) {
             state = GameState.PLAYING;
         }
+        
+        modules.forEach(m -> m.onPlayerJoin(this, player));
     }
 
     public void removePlayer(Player player) {
         players.remove(player.getUniqueId());
+        
+        modules.forEach(m -> m.onPlayerQuit(this, player));
         
         // If no players left and game has started (or even if waiting), unload it to save resources
         if (players.isEmpty()) {
@@ -58,6 +76,8 @@ public class GameInstance {
     public void checkTime() {
         if (state == GameState.ENDING) return;
         
+        modules.forEach(m -> m.onTick(this));
+        
         long elapsed = System.currentTimeMillis() - startTime;
         if (elapsed >= MATCH_DURATION_MS) {
             endGame();
@@ -66,6 +86,9 @@ public class GameInstance {
 
     public void endGame() {
         state = GameState.ENDING;
+        
+        modules.forEach(m -> m.onEnd(this));
+
         // Kick all players to lobby
         for (UUID uuid : players) {
             Player p = Bukkit.getPlayer(uuid);

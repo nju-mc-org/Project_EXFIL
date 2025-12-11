@@ -99,6 +99,8 @@ public final class ProjectEXFILPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new LobbyListener(), this);
         getServer().getPluginManager().registerEvents(new ReviveListener(this, reviveManager, gameManager), this);
         
+
+        
         // Start Tasks
         new ExtractionTask(gameManager, regionManager).runTaskTimer(this, 20L, 20L);
         
@@ -138,6 +140,10 @@ public final class ProjectEXFILPlugin extends JavaPlugin {
 
     public NametagManager getNametagManager() {
         return nametagManager;
+    }
+
+    public MainMenuView getMainMenuView() {
+        return mainMenuView;
     }
 
     /**

@@ -11,6 +11,7 @@ import org.nmo.project_exfil.ProjectEXFILPlugin;
 import com.alessiodp.parties.api.interfaces.PartyPlayer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.title.Title;
 
 import java.time.Duration;
@@ -51,7 +52,10 @@ public class ReviveManager {
             DownedData data = downedPlayers.get(uuid);
             
             // Apply effects
-            player.setSwimming(true);
+            if (!player.isSwimming()) {
+                player.setSwimming(true);
+            }
+            // player.setGliding(true); // Optional: Try if swimming doesn't work visually
             player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 20, 4, false, false));
             player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20, 0, false, false));
 
@@ -120,21 +124,30 @@ public class ReviveManager {
         player.setSwimming(true);
         
         Title.Times times = Title.Times.times(Duration.ofMillis(500), Duration.ofMillis(3000), Duration.ofMillis(1000));
-        Title title = Title.title(Component.text("§cDOWNED!"), Component.text("§7Wait for a teammate to revive you"), times);
+        Title title = Title.title(
+            LegacyComponentSerializer.legacySection().deserialize("§cDOWNED!"), 
+            LegacyComponentSerializer.legacySection().deserialize("§7Wait for a teammate to revive you"), 
+            times
+        );
         player.showTitle(title);
         
-        player.sendMessage("§cYou are downed! Crawl to safety or wait for help.");
+        player.sendMessage(LegacyComponentSerializer.legacySection().deserialize("§cYou are downed! Crawl to safety or wait for help."));
     }
 
     public void revive(Player player) {
         downedPlayers.remove(player.getUniqueId());
         player.setSwimming(false);
+        // player.setGliding(false);
         player.setHealth(6.0); // Restore to 3 hearts
         player.removePotionEffect(PotionEffectType.SLOWNESS);
         player.removePotionEffect(PotionEffectType.BLINDNESS);
         
         Title.Times times = Title.Times.times(Duration.ofMillis(500), Duration.ofMillis(2000), Duration.ofMillis(1000));
-        Title title = Title.title(Component.text("§aREVIVED!"), Component.text("§7Get back in the fight!"), times);
+        Title title = Title.title(
+            LegacyComponentSerializer.legacySection().deserialize("§aREVIVED!"), 
+            LegacyComponentSerializer.legacySection().deserialize("§7Get back in the fight!"), 
+            times
+        );
         player.showTitle(title);
     }
 
@@ -149,7 +162,7 @@ public class ReviveManager {
     }
 
     private void sendActionBar(Player player, String message) {
-        player.sendActionBar(Component.text(message));
+        player.sendActionBar(LegacyComponentSerializer.legacySection().deserialize(message));
     }
 
     private String getProgressBar(int current, int max) {

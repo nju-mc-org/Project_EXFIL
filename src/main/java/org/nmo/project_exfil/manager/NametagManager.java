@@ -1,27 +1,20 @@
 package org.nmo.project_exfil.manager;
 
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.ProtocolManager;
-import com.comphenix.protocol.events.PacketContainer;
-import com.comphenix.protocol.wrappers.WrappedChatComponent;
-import com.comphenix.protocol.wrappers.EnumWrappers.ChatFormatting;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
 import org.nmo.project_exfil.ProjectEXFILPlugin;
 import com.alessiodp.parties.api.interfaces.PartyPlayer;
 import net.kyori.adventure.text.format.NamedTextColor;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
 public class NametagManager {
 
     private final ProjectEXFILPlugin plugin;
-    private final ProtocolManager protocolManager;
     private final PartyManager partyManager;
 
     private static final String TEAM_ALLY = "998_ALLY";
@@ -29,7 +22,6 @@ public class NametagManager {
 
     public NametagManager(ProjectEXFILPlugin plugin) {
         this.plugin = plugin;
-        this.protocolManager = ProtocolLibrary.getProtocolManager();
         this.partyManager = plugin.getPartyManager();
         
         // Start periodic update task to ensure tags stay correct
@@ -70,58 +62,50 @@ public class NametagManager {
             }
         }
 
-        // Send packets
-        // We use Mode 0 (Create) to ensure the team exists and has correct settings.
-        // If it already exists, the client usually updates it.
-        sendTeamPacket(viewer, TEAM_ALLY, NamedTextColor.GREEN, "always", allies);
-        sendTeamPacket(viewer, TEAM_ENEMY, NamedTextColor.WHITE, "never", enemies);
+        // Use Bukkit Scoreboard API instead of ProtocolLib to avoid packet errors
+        updateTeam(viewer, TEAM_ALLY, NamedTextColor.GREEN, Team.OptionStatus.ALWAYS, allies);
+        updateTeam(viewer, TEAM_ENEMY, NamedTextColor.WHITE, Team.OptionStatus.NEVER, enemies);
     }
 
-    private void sendTeamPacket(Player viewer, String teamName, NamedTextColor color, String visibility, List<String> players) {
-        PacketContainer packet = protocolManager.createPacket(PacketType.Play.Server.SCOREBOARD_TEAM);
-        packet.getModifier().writeDefaults();
+    private void updateTeam(Player viewer, String teamName, NamedTextColor color, Team.OptionStatus visibility, List<String> players) {
+        Scoreboard board = viewer.getScoreboard();
         
-        packet.getStrings().write(0, teamName);
-        packet.getIntegers().write(0, 0); // Mode 0: Create
-
-        // Disable Friendly Fire (Options: 0x00 = Off, 0x01 = On, 0x02 = See Invisible)
-        if (packet.getIntegers().size() > 1) {
-            packet.getIntegers().write(1, 0);
+        // Ensure player has a private scoreboard (ScoreboardManager also does this, but safety first)
+        if (board.equals(Bukkit.getScoreboardManager().getMainScoreboard())) {
+            board = Bukkit.getScoreboardManager().getNewScoreboard();
+            viewer.setScoreboard(board);
         }
 
-        // Set Color
-        try {
-            if (packet.getSpecificModifier(ChatFormatting.class).size() > 0) {
-                try {
-                    ChatFormatting format = ChatFormatting.valueOf(color.toString().toUpperCase());
-                    packet.getSpecificModifier(ChatFormatting.class).write(0, format);
-                } catch (IllegalArgumentException e) {
-                    // Fallback or ignore if color doesn't match
-                    packet.getSpecificModifier(ChatFormatting.class).write(0, ChatFormatting.WHITE);
-                }
+        Team team = board.getTeam(teamName);
+        if (team == null) {
+            team = board.registerNewTeam(teamName);
+        }
+
+        // Update team properties
+        if (!team.hasColor() || !team.color().equals(color)) {
+            team.color(color);
+        }
+        
+        if (team.getOption(Team.Option.NAME_TAG_VISIBILITY) != visibility) {
+            team.setOption(Team.Option.NAME_TAG_VISIBILITY, visibility);
+        }
+        
+        if (team.getOption(Team.Option.COLLISION_RULE) != Team.OptionStatus.NEVER) {
+            team.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.NEVER);
+        }
+
+        // Update players
+        // Remove players not in the list
+        for (String entry : new ArrayList<>(team.getEntries())) {
+            if (!players.contains(entry)) {
+                team.removeEntry(entry);
             }
-        } catch (Exception e) {
-            // Ignore
         }
-        
-        // Set Visibility and Collision
-        // Indices might vary, but usually:
-        // 0: Name
-        // 1: Visibility
-        // 2: Collision
-        // 3: Prefix (String in old, but Component in new) - wait, Strings structure usually has Visibility at 1.
-        if (packet.getStrings().size() >= 3) {
-            packet.getStrings().write(1, visibility);
-            packet.getStrings().write(2, "never"); // Collision Rule
-        }
-
-        // Set Players
-        packet.getSpecificModifier(Collection.class).write(0, players);
-
-        try {
-            protocolManager.sendServerPacket(viewer, packet);
-        } catch (Exception e) {
-            e.printStackTrace();
+        // Add players in the list
+        for (String player : players) {
+            if (!team.hasEntry(player)) {
+                team.addEntry(player);
+            }
         }
     }
 }

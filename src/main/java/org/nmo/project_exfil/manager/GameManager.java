@@ -8,8 +8,8 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.nmo.project_exfil.ProjectEXFILPlugin;
 import org.nmo.project_exfil.integration.slime.SlimeWorldManagerIntegration;
-import org.nmo.project_exfil.manager.RegionManager.SpawnRegion;
-import org.nmo.project_exfil.manager.RegionManager.ExtractionRegion;
+import org.nmo.project_exfil.region.SpawnRegion;
+import org.nmo.project_exfil.region.ExtractionRegion;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -99,9 +99,9 @@ public class GameManager {
         // Try 20 times to find a valid spot
         for (int i = 0; i < 20; i++) {
             double angle = Math.random() * 2 * Math.PI;
-            double dist = Math.random() * spawnRegion.radius;
-            double x = spawnRegion.x + dist * Math.cos(angle);
-            double z = spawnRegion.z + dist * Math.sin(angle);
+            double dist = Math.random() * spawnRegion.getRadius();
+            double x = spawnRegion.getX() + dist * Math.cos(angle);
+            double z = spawnRegion.getZ() + dist * Math.sin(angle);
             
             // Get highest block at x, z
             int highestY = world.getHighestBlockYAt((int)x, (int)z);
@@ -120,8 +120,8 @@ public class GameManager {
         }
         
         // Fallback: just return center (adjusted for Y)
-        int centerY = world.getHighestBlockYAt((int)spawnRegion.x, (int)spawnRegion.z);
-        return new Location(world, spawnRegion.x, centerY + 1, spawnRegion.z);
+        int centerY = world.getHighestBlockYAt((int)spawnRegion.getX(), (int)spawnRegion.getZ());
+        return new Location(world, spawnRegion.getX(), centerY + 1, spawnRegion.getZ());
     }
     
     private boolean isSafeSpawnBlock(Block block) {
@@ -156,8 +156,8 @@ public class GameManager {
         // Check distance to extraction points
         for (ExtractionRegion region : extractions.values()) {
             // Simple check: distance to center of extraction box
-            double centerX = region.box.getCenterX();
-            double centerZ = region.box.getCenterZ();
+            double centerX = region.getBox().getCenterX();
+            double centerZ = region.getBox().getCenterZ();
             double distSq = Math.pow(loc.getX() - centerX, 2) + Math.pow(loc.getZ() - centerZ, 2);
             if (distSq < 2500) { // 50 blocks
                 return false;

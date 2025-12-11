@@ -60,6 +60,19 @@ public class MapSelectionView {
             if (y > 2) break;
         }
 
+        // Back Button
+        ItemStack back = new ItemStack(Material.ARROW);
+        ItemMeta backMeta = back.getItemMeta();
+        backMeta.displayName(plugin.getLanguageManager().getMessage("exfil.team.back"));
+        back.setItemMeta(backMeta);
+        pane.addItem(new GuiItem(back, event -> {
+            if (plugin.getMainMenuView() != null) {
+                plugin.getMainMenuView().open(player);
+            } else {
+                player.closeInventory();
+            }
+        }), 0, 2);
+
         gui.addPane(pane);
         gui.show(player);
     }

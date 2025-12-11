@@ -54,7 +54,7 @@ public class ExtractionTask extends BukkitRunnable {
                 Title title = Title.title(Component.empty(), plugin.getLanguageManager().getMessage("exfil.extract.cancelled"), times);
                 player.showTitle(title);
                 
-                DependencyHelper.removeExtractionHologram(player);
+                // DependencyHelper.removeExtractionHologram(player);
                 DependencyHelper.setExtractionHeader(player, false);
             }
         }
@@ -66,7 +66,7 @@ public class ExtractionTask extends BukkitRunnable {
         
         if (timeLeft <= 0) {
             extractionTimers.remove(player.getUniqueId());
-            DependencyHelper.removeExtractionHologram(player);
+            // DependencyHelper.removeExtractionHologram(player);
             DependencyHelper.setExtractionHeader(player, false);
             
             Component subComp = plugin.getLanguageManager().getMessage("exfil.extract.subtitle", Placeholder.unparsed("player", player.getName()));
@@ -83,7 +83,7 @@ public class ExtractionTask extends BukkitRunnable {
             Title title = Title.title(plugin.getLanguageManager().getMessage("exfil.extract.extracting"), plugin.getLanguageManager().getMessage("exfil.extract.seconds", Placeholder.unparsed("time", String.valueOf(timeLeft))), times);
             player.showTitle(title);
             
-            DependencyHelper.createExtractionHologram(player, timeLeft);
+            // DependencyHelper.createExtractionHologram(player, timeLeft);
             DependencyHelper.setExtractionHeader(player, true);
         }
     }
