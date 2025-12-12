@@ -59,6 +59,15 @@ public class DeleteCommand implements SubCommand {
             return;
         }
 
+        if (args[1].equalsIgnoreCase("loot")) {
+            if (plugin.getRegionManager().deleteLootRegion(args[2])) {
+                plugin.getLanguageManager().send(sender, "exfil.delete.loot_success");
+            } else {
+                plugin.getLanguageManager().send(sender, "exfil.delete.loot_not_found");
+            }
+            return;
+        }
+
         plugin.getLanguageManager().send(sender, "exfil.command.usage_delete");
     }
 
@@ -71,6 +80,7 @@ public class DeleteCommand implements SubCommand {
             subCmds.add("extract");
             subCmds.add("combat");
             subCmds.add("npc");
+            subCmds.add("loot");
             
             String input = args[1].toLowerCase();
             for (String cmd : subCmds) {
@@ -93,6 +103,10 @@ public class DeleteCommand implements SubCommand {
                 }
             } else if (args[1].equalsIgnoreCase("npc")) {
                 for (String name : plugin.getRegionManager().getAllNPCRegions().keySet()) {
+                    completions.add(name);
+                }
+            } else if (args[1].equalsIgnoreCase("loot")) {
+                for (String name : plugin.getRegionManager().getAllLootRegions().keySet()) {
                     completions.add(name);
                 }
             }

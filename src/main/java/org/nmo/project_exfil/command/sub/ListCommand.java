@@ -6,6 +6,7 @@ import org.nmo.project_exfil.command.SubCommand;
 import org.nmo.project_exfil.manager.MapManager.GameMap;
 import org.nmo.project_exfil.region.ExtractionRegion;
 import org.nmo.project_exfil.region.CombatRegion;
+import org.nmo.project_exfil.region.LootRegion;
 import org.nmo.project_exfil.region.NPCRegion;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 
@@ -91,6 +92,28 @@ public class ListCommand implements SubCommand {
             return;
         }
 
+        if (args[1].equalsIgnoreCase("loot")) {
+            plugin.getLanguageManager().send(sender, "exfil.list.loot.header");
+            Map<String, LootRegion> regions = plugin.getRegionManager().getAllLootRegions();
+            
+            List<String> worlds = new ArrayList<>();
+            for (LootRegion r : regions.values()) {
+                if (!worlds.contains(r.getWorldName())) worlds.add(r.getWorldName());
+            }
+            
+            for (String world : worlds) {
+                plugin.getLanguageManager().send(sender, "exfil.list.loot.world_header", Placeholder.unparsed("world", world));
+                for (Map.Entry<String, LootRegion> entry : regions.entrySet()) {
+                    if (entry.getValue().getWorldName().equals(world)) {
+                        plugin.getLanguageManager().send(sender, "exfil.list.loot.format", 
+                            Placeholder.unparsed("name", entry.getKey()),
+                            Placeholder.unparsed("count", String.valueOf(entry.getValue().getCount())));
+                    }
+                }
+            }
+            return;
+        }
+
         plugin.getLanguageManager().send(sender, "exfil.command.usage_list");
     }
 
@@ -103,6 +126,7 @@ public class ListCommand implements SubCommand {
             subCmds.add("extracts");
             subCmds.add("combat");
             subCmds.add("npc");
+            subCmds.add("loot");
             
             String input = args[1].toLowerCase();
             for (String cmd : subCmds) {

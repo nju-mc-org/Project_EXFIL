@@ -5,6 +5,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Nullable;
 import org.nmo.project_exfil.command.ExfilCommand;
 import org.nmo.project_exfil.manager.GameManager;
+import org.nmo.project_exfil.manager.LootManager;
 import org.nmo.project_exfil.manager.PartyManager;
 import org.nmo.project_exfil.manager.RegionManager;
 import org.nmo.project_exfil.manager.StashManager;
@@ -24,6 +25,7 @@ import org.nmo.project_exfil.util.DependencyHelper;
 import org.nmo.project_exfil.listener.ConnectionListener;
 import org.nmo.project_exfil.listener.DeathListener;
 import org.nmo.project_exfil.listener.LobbyListener;
+import org.nmo.project_exfil.listener.LootListener;
 import org.nmo.project_exfil.listener.ReviveListener;
 
 public final class ProjectEXFILPlugin extends JavaPlugin {
@@ -32,6 +34,7 @@ public final class ProjectEXFILPlugin extends JavaPlugin {
     
     private GameManager gameManager;
     private RegionManager regionManager;
+    private LootManager lootManager;
     private ScoreboardManager scoreboardManager;
     private PartyManager partyManager;
     private StashManager stashManager;
@@ -73,6 +76,7 @@ public final class ProjectEXFILPlugin extends JavaPlugin {
         // Initialize Managers
         this.gameManager = new GameManager(this);
         this.regionManager = new RegionManager(this);
+        this.lootManager = new LootManager(this);
         this.scoreboardManager = new ScoreboardManager(this);
         this.partyManager = new PartyManager(this);
         this.stashManager = new StashManager(this);
@@ -98,6 +102,7 @@ public final class ProjectEXFILPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new ConnectionListener(gameManager), this);
         getServer().getPluginManager().registerEvents(new LobbyListener(), this);
         getServer().getPluginManager().registerEvents(new ReviveListener(this, reviveManager, gameManager), this);
+        getServer().getPluginManager().registerEvents(new LootListener(this), this);
         
 
         
@@ -132,6 +137,10 @@ public final class ProjectEXFILPlugin extends JavaPlugin {
 
     public RegionManager getRegionManager() {
         return regionManager;
+    }
+
+    public LootManager getLootManager() {
+        return lootManager;
     }
 
     public ReviveManager getReviveManager() {

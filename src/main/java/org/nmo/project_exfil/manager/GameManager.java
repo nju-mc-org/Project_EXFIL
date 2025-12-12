@@ -207,6 +207,10 @@ public class GameManager {
         }
     }
     
+    public GameInstance getGameInstance(Player player) {
+        return playerInstances.get(player.getUniqueId());
+    }
+
     public GameInstance getPlayerInstance(Player player) {
         return playerInstances.get(player.getUniqueId());
     }

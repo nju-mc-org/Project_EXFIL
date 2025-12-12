@@ -20,6 +20,7 @@ import org.nmo.project_exfil.util.DependencyHelper;
 
 import org.nmo.project_exfil.region.CombatRegion;
 import org.nmo.project_exfil.region.ExtractionRegion;
+import org.nmo.project_exfil.region.LootRegion;
 import org.nmo.project_exfil.region.NPCRegion;
 import org.nmo.project_exfil.region.SpawnRegion;
 
@@ -36,6 +37,7 @@ public class RegionManager {
     private final Map<String, SpawnRegion> spawnRegions = new HashMap<>();
     private final Map<String, CombatRegion> combatRegions = new HashMap<>();
     private final Map<String, NPCRegion> npcRegions = new HashMap<>();
+    private final Map<String, LootRegion> lootRegions = new HashMap<>();
     private final File regionsFile;
     private YamlConfiguration regionsConfig;
 
@@ -59,14 +61,7 @@ public class RegionManager {
         if (section != null) {
             for (String key : section.getKeys(false)) {
                 String worldName = section.getString(key + ".world");
-                double minX = section.getDouble(key + ".minX");
-                double minY = section.getDouble(key + ".minY");
-                double minZ = section.getDouble(key + ".minZ");
-                double maxX = section.getDouble(key + ".maxX");
-                double maxY = section.getDouble(key + ".maxY");
-                double maxZ = section.getDouble(key + ".maxZ");
-                
-                BoundingBox box = new BoundingBox(minX, minY, minZ, maxX, maxY, maxZ);
+                BoundingBox box = loadBoundingBox(section, key);
                 regions.put(key, new ExtractionRegion(worldName, box));
             }
         }
@@ -101,15 +96,8 @@ public class RegionManager {
         if (npcSection != null) {
             for (String key : npcSection.getKeys(false)) {
                 String worldName = npcSection.getString(key + ".world");
-                double minX = npcSection.getDouble(key + ".minX");
-                double minY = npcSection.getDouble(key + ".minY");
-                double minZ = npcSection.getDouble(key + ".minZ");
-                double maxX = npcSection.getDouble(key + ".maxX");
-                double maxY = npcSection.getDouble(key + ".maxY");
-                double maxZ = npcSection.getDouble(key + ".maxZ");
                 int count = npcSection.getInt(key + ".count");
-                
-                BoundingBox box = new BoundingBox(minX, minY, minZ, maxX, maxY, maxZ);
+                BoundingBox box = loadBoundingBox(npcSection, key);
                 npcRegions.put(key, new NPCRegion(worldName, box, count));
             }
         }
@@ -170,6 +158,22 @@ public class RegionManager {
             regionsConfig.set("npcs." + key + ".maxZ", box.getMaxZ());
             regionsConfig.set("npcs." + key + ".count", region.getCount());
         }
+
+        regionsConfig.set("loot", null);
+        for (Map.Entry<String, LootRegion> entry : lootRegions.entrySet()) {
+            String key = entry.getKey();
+            LootRegion region = entry.getValue();
+            BoundingBox box = region.getBox();
+            
+            regionsConfig.set("loot." + key + ".world", region.getWorldName());
+            regionsConfig.set("loot." + key + ".minX", box.getMinX());
+            regionsConfig.set("loot." + key + ".minY", box.getMinY());
+            regionsConfig.set("loot." + key + ".minZ", box.getMinZ());
+            regionsConfig.set("loot." + key + ".maxX", box.getMaxX());
+            regionsConfig.set("loot." + key + ".maxY", box.getMaxY());
+            regionsConfig.set("loot." + key + ".maxZ", box.getMaxZ());
+            regionsConfig.set("loot." + key + ".count", region.getCount());
+        }
         
         try {
             regionsConfig.save(regionsFile);
@@ -194,14 +198,7 @@ public class RegionManager {
         Region selection = getPlayerSelection(admin);
         if (selection == null) return;
 
-        BoundingBox box = new BoundingBox(
-            selection.getMinimumPoint().x(),
-            selection.getMinimumPoint().y(),
-            selection.getMinimumPoint().z(),
-            selection.getMaximumPoint().x(),
-            selection.getMaximumPoint().y(),
-            selection.getMaximumPoint().z()
-        );
+        BoundingBox box = getSelectionBox(selection);
         
         String worldName = plugin.getGameManager().getTemplateName(admin.getWorld());
         regions.put(name, new ExtractionRegion(worldName, box));
@@ -214,22 +211,6 @@ public class RegionManager {
     }
     
     private void updateHologram(String name, String worldName, BoundingBox box) {
-        // Only create holograms for template worlds (where admins edit)
-        // For game instances, we might need to spawn them dynamically per instance?
-        // The user request implies "in the extraction point", which exists in game instances.
-        // However, DecentHolograms are usually global or per-world.
-        // If we create a hologram in the template world, SlimeWorldManager might not copy it to instances automatically if it's an entity.
-        // But DecentHolograms stores holograms in its own config.
-        // If we want holograms in instances, we need to create them when the instance is created.
-        
-        // Wait, the user says "extraction point central suspended".
-        // If I create it here, it's for the template world.
-        // When a game instance is created, we need to spawn holograms for that instance.
-        
-        // Let's just save the data here. The GameInstance should handle spawning holograms for its world.
-        // But wait, if the admin is editing in a normal world, they want to see it too?
-        // Let's spawn it in the world specified.
-        
         World world = Bukkit.getWorld(worldName);
         if (world != null) {
             Location center = new Location(world, box.getCenterX(), box.getCenterY(), box.getCenterZ());
@@ -286,20 +267,28 @@ public class RegionManager {
         Region selection = getPlayerSelection(admin);
         if (selection == null) return;
 
-        BoundingBox box = new BoundingBox(
-            selection.getMinimumPoint().x(),
-            selection.getMinimumPoint().y(),
-            selection.getMinimumPoint().z(),
-            selection.getMaximumPoint().x(),
-            selection.getMaximumPoint().y(),
-            selection.getMaximumPoint().z()
-        );
+        BoundingBox box = getSelectionBox(selection);
         
         String worldName = plugin.getGameManager().getTemplateName(admin.getWorld());
         npcRegions.put(name, new NPCRegion(worldName, box, count));
         saveRegions();
         
         plugin.getLanguageManager().send(admin, "exfil.region.npc_saved", 
+            Placeholder.unparsed("name", name),
+            Placeholder.unparsed("count", String.valueOf(count)));
+    }
+
+    public void saveLootRegion(Player admin, String name, int count) {
+        Region selection = getPlayerSelection(admin);
+        if (selection == null) return;
+
+        BoundingBox box = getSelectionBox(selection);
+        
+        String worldName = plugin.getGameManager().getTemplateName(admin.getWorld());
+        lootRegions.put(name, new LootRegion(worldName, box, count));
+        saveRegions();
+        
+        plugin.getLanguageManager().send(admin, "exfil.region.loot_saved", 
             Placeholder.unparsed("name", name),
             Placeholder.unparsed("count", String.valueOf(count)));
     }
@@ -343,6 +332,14 @@ public class RegionManager {
         return false;
     }
 
+    public boolean deleteLootRegion(String name) {
+        if (lootRegions.remove(name) != null) {
+            saveRegions();
+            return true;
+        }
+        return false;
+    }
+
     public Map<String, ExtractionRegion> getAllExtractionRegions() {
         return regions;
     }
@@ -355,6 +352,10 @@ public class RegionManager {
         return npcRegions;
     }
 
+    public Map<String, LootRegion> getAllLootRegions() {
+        return lootRegions;
+    }
+
     public List<NPCRegion> getNPCRegionsForWorld(String templateWorldName) {
         List<NPCRegion> list = new java.util.ArrayList<>();
         for (NPCRegion region : npcRegions.values()) {
@@ -365,7 +366,38 @@ public class RegionManager {
         return list;
     }
 
+    public List<LootRegion> getLootRegionsForWorld(String templateWorldName) {
+        List<LootRegion> list = new java.util.ArrayList<>();
+        for (LootRegion region : lootRegions.values()) {
+            if (region.getWorldName().equals(templateWorldName)) {
+                list.add(region);
+            }
+        }
+        return list;
+    }
+
     public CombatRegion getCombatRegion(String templateWorldName) {
         return combatRegions.get(templateWorldName);
+    }
+
+    private BoundingBox loadBoundingBox(ConfigurationSection section, String key) {
+        double minX = section.getDouble(key + ".minX");
+        double minY = section.getDouble(key + ".minY");
+        double minZ = section.getDouble(key + ".minZ");
+        double maxX = section.getDouble(key + ".maxX");
+        double maxY = section.getDouble(key + ".maxY");
+        double maxZ = section.getDouble(key + ".maxZ");
+        return new BoundingBox(minX, minY, minZ, maxX, maxY, maxZ);
+    }
+
+    private BoundingBox getSelectionBox(Region selection) {
+        return new BoundingBox(
+            selection.getMinimumPoint().x(),
+            selection.getMinimumPoint().y(),
+            selection.getMinimumPoint().z(),
+            selection.getMaximumPoint().x(),
+            selection.getMaximumPoint().y(),
+            selection.getMaximumPoint().z()
+        );
     }
 }

@@ -75,6 +75,21 @@ public class SetCommand implements SubCommand {
             return;
         }
 
+        if (args[1].equalsIgnoreCase("loot")) {
+            if (args.length < 4) {
+                plugin.getLanguageManager().send(player, "exfil.command.usage_setloot");
+                return;
+            }
+            String name = args[2];
+            try {
+                int count = Integer.parseInt(args[3]);
+                regionManager.saveLootRegion(player, name, count);
+            } catch (NumberFormatException e) {
+                plugin.getLanguageManager().send(player, "exfil.command.invalid_number");
+            }
+            return;
+        }
+
         plugin.getLanguageManager().send(player, "exfil.command.usage_setextract");
     }
 
@@ -87,6 +102,7 @@ public class SetCommand implements SubCommand {
             subCmds.add("spawn");
             subCmds.add("combat");
             subCmds.add("npc");
+            subCmds.add("loot");
             
             String input = args[1].toLowerCase();
             for (String cmd : subCmds) {
@@ -101,9 +117,13 @@ public class SetCommand implements SubCommand {
                 completions.add("<radius>");
             } else if (args[1].equalsIgnoreCase("npc")) {
                 completions.add("<name>");
+            } else if (args[1].equalsIgnoreCase("loot")) {
+                completions.add("<name>");
             }
         } else if (args.length == 4) {
             if (args[1].equalsIgnoreCase("npc")) {
+                completions.add("<count>");
+            } else if (args[1].equalsIgnoreCase("loot")) {
                 completions.add("<count>");
             }
         }

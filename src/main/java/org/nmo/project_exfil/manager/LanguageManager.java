@@ -65,21 +65,6 @@ public class LanguageManager {
     }
     
     public void send(Audience audience, String key, TagResolver... tags) {
-        // Create a translatable component with the key
-        // We use MiniMessage to parse the translation result if needed, but GlobalTranslator handles Component.translatable
-        // However, to support MiniMessage tags INSIDE the properties file, we need a bit more logic if we want to parse them after translation.
-        // But Adventure's GlobalTranslator returns a MessageFormat by default for properties.
-        // If we want MiniMessage support in lang files, we usually use a custom translator or just parse the result.
-        
-        // Simple approach: Use MiniMessage to parse the raw string from bundle if we were doing it manually.
-        // But since we registered to GlobalTranslator, Component.translatable(key) should work and return the text.
-        // If the text contains MiniMessage tags, they won't be parsed automatically by vanilla client.
-        // We need to parse them.
-        
-        // Better approach for MiniMessage + Lang:
-        // 1. Get raw string from registry
-        // 2. Parse with MiniMessage
-        
         String raw = getRawString(key);
         if (raw == null) raw = key;
         
@@ -88,8 +73,6 @@ public class LanguageManager {
     }
     
     private String getRawString(String key) {
-        // This is a helper to get the raw string from our registry for the default locale
-        // In a real multi-lang setup, we would check player's locale.
         java.text.MessageFormat format = (java.text.MessageFormat) registry.translate(key, Locale.CHINA);
         if (format != null) {
             return format.toPattern();

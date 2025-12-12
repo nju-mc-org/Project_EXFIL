@@ -36,6 +36,7 @@ public class ExfilCommand implements CommandExecutor, TabCompleter {
         subCommands.put("list", new ListCommand(plugin));
         subCommands.put("delete", new DeleteCommand(plugin));
         subCommands.put("importmap", new ImportMapCommand(plugin));
+        subCommands.put("loot", new LootCommand(plugin));
     }
 
     @Override
@@ -56,11 +57,6 @@ public class ExfilCommand implements CommandExecutor, TabCompleter {
         SubCommand subCmd = subCommands.get(subCmdName);
 
         if (subCmd == null) {
-            // Unknown command, maybe show help or just open menu?
-            // For now, let's just show help or do nothing.
-            // Or maybe check if it's a valid subcommand but user typed it wrong?
-            // Let's just return false to show usage from plugin.yml if any, or send a message.
-            // The original code didn't handle unknown commands explicitly other than falling through.
             return false;
         }
 

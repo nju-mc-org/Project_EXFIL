@@ -42,6 +42,7 @@ public class GameInstance {
         modules.add(new HologramModule());
         modules.add(new BossBarModule());
         modules.add(new BoundaryModule());
+        modules.add(new LootModule());
     }
 
     public boolean canJoin() {
@@ -99,6 +100,15 @@ public class GameInstance {
         }
         // Notify manager to unload (handled in GameManager usually)
         ProjectEXFILPlugin.getPlugin().getGameManager().unloadInstance(this);
+    }
+
+    public <T extends GameModule> T getModule(Class<T> clazz) {
+        for (GameModule module : modules) {
+            if (clazz.isInstance(module)) {
+                return clazz.cast(module);
+            }
+        }
+        return null;
     }
 
     public String getInstanceId() {
