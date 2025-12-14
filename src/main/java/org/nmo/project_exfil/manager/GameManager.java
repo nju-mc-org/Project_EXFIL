@@ -179,6 +179,49 @@ public class GameManager {
         plugin.getScoreboardManager().endCombat(player);
     }
 
+    public void extractToLobby(Player player) {
+        depositInventoryToStash(player);
+        plugin.getLanguageManager().send(player, "exfil.extract_success");
+        teleportToLobby(player);
+    }
+
+    public void failToLobby(Player player) {
+        clearPlayerInventory(player);
+        plugin.getLanguageManager().send(player, "exfil.raid.failed");
+        teleportToLobby(player);
+    }
+
+    public void handleDisconnect(Player player) {
+        if (getPlayerInstance(player) != null) {
+            clearPlayerInventory(player);
+        }
+        removePlayerFromGame(player);
+    }
+
+    private void clearPlayerInventory(Player player) {
+        player.getInventory().clear();
+        player.getInventory().setArmorContents(new org.bukkit.inventory.ItemStack[4]);
+        player.getInventory().setItemInOffHand(null);
+    }
+
+    private void depositInventoryToStash(Player player) {
+        java.util.List<org.bukkit.inventory.ItemStack> items = new java.util.ArrayList<>();
+        for (org.bukkit.inventory.ItemStack it : player.getInventory().getStorageContents()) {
+            if (it != null && !it.getType().isAir()) items.add(it.clone());
+        }
+        for (org.bukkit.inventory.ItemStack it : player.getInventory().getArmorContents()) {
+            if (it != null && !it.getType().isAir()) items.add(it.clone());
+        }
+        org.bukkit.inventory.ItemStack offhand = player.getInventory().getItemInOffHand();
+        if (offhand != null && !offhand.getType().isAir()) items.add(offhand.clone());
+
+        clearPlayerInventory(player);
+
+        if (!items.isEmpty()) {
+            plugin.getStashManager().depositItemsAsync(player, items);
+        }
+    }
+
     public void teleportToLobby(Player player) {
         removePlayerFromGame(player);
 
@@ -196,7 +239,10 @@ public class GameManager {
     }
     
     public void unloadInstance(GameInstance instance) {
-        activeInstances.get(instance.getTemplateName()).remove(instance);
+        List<GameInstance> list = activeInstances.get(instance.getTemplateName());
+        if (list != null) {
+            list.remove(instance);
+        }
         slimeManager.unloadWorld(instance.getBukkitWorld().getName());
     }
     
@@ -213,6 +259,10 @@ public class GameManager {
 
     public GameInstance getPlayerInstance(Player player) {
         return playerInstances.get(player.getUniqueId());
+    }
+
+    public java.util.Map<java.util.UUID, GameInstance> getPlayerInstancesView() {
+        return java.util.Collections.unmodifiableMap(playerInstances);
     }
     
     public SlimeWorldManagerIntegration getSlimeManager() {

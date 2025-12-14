@@ -21,6 +21,8 @@ import java.util.UUID;
 
 public class ReviveManager {
 
+    private static final int TASK_INTERVAL_TICKS = 5;
+
     private final ProjectEXFILPlugin plugin;
     private final Map<UUID, DownedData> downedPlayers = new HashMap<>();
     private final int MAX_DOWNED_TIME = 60 * 20; // 60 seconds in ticks
@@ -37,34 +39,36 @@ public class ReviveManager {
             public void run() {
                 tick();
             }
-        }.runTaskTimer(plugin, 1L, 1L);
+        }.runTaskTimer(plugin, TASK_INTERVAL_TICKS, TASK_INTERVAL_TICKS);
     }
 
     private void tick() {
-        // Use a copy to avoid ConcurrentModificationException if we remove players
-        for (UUID uuid : new HashMap<>(downedPlayers).keySet()) {
+        java.util.Iterator<Map.Entry<UUID, DownedData>> it = downedPlayers.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry<UUID, DownedData> entry = it.next();
+            UUID uuid = entry.getKey();
             Player player = Bukkit.getPlayer(uuid);
             if (player == null || !player.isOnline()) {
-                downedPlayers.remove(uuid);
+                it.remove();
                 continue;
             }
 
-            DownedData data = downedPlayers.get(uuid);
-            
+            DownedData data = entry.getValue();
+
             // Apply effects
             if (!player.isSwimming()) {
                 player.setSwimming(true);
             }
-            // player.setGliding(true); // Optional: Try if swimming doesn't work visually
-            player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 20, 4, false, false));
-            player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20, 0, false, false));
+            int effDuration = (int) (TASK_INTERVAL_TICKS * 4);
+            player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, effDuration, 4, false, false));
+            player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, effDuration, 0, false, false));
 
             // Check for reviver
             Player reviver = findReviver(player);
-            
+
             if (reviver != null) {
                 // Being revived
-                data.reviveProgress++;
+                data.reviveProgress += TASK_INTERVAL_TICKS;
                 
                 // Notify
                 sendActionBar(player, "§aBeing revived: " + getProgressBar(data.reviveProgress, REVIVE_TIME));
@@ -76,7 +80,7 @@ public class ReviveManager {
             } else {
                 // Not being revived
                 data.reviveProgress = 0; // Reset progress if interrupted
-                data.timeLeft--;
+                data.timeLeft -= TASK_INTERVAL_TICKS;
                 
                 sendActionBar(player, "§cDowned! Time left: " + (data.timeLeft / 20) + "s");
                 

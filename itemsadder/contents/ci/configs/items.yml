@@ -1,0 +1,2438 @@
+info:
+  namespace: ci
+
+items:
+  # NPC icons
+  npc:
+    display_name: ""
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - npc
+  npc1:
+    display_name: "Prapor"
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - npc1
+  npc2:
+    display_name: "Therapist"
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - npc2
+  npc3:
+    display_name: "Fence"
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - npc3
+  npc4:
+    display_name: "Skier"
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - npc4
+  npc5:
+    display_name: "Peacekeeper"
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - npc5
+  npc6:
+    display_name: "Mechanic"
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - npc6
+  npc7:
+    display_name: "Ragman"
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - npc7
+  npc8:
+    display_name: "Jaeger"
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - npc8
+  npc9:
+    display_name: "Lightkeeper"
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - npc9
+
+
+
+
+      # 药品
+  ai-2:
+    display_name: "AI-2急救组合"
+    lore:
+      - '&a标准制式急救组合。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - yaopin1
+  ifak:
+    display_name: "IFAK单兵战术急救包"
+    lore:
+      - '&aIFAK是现役士兵标配的单兵医疗包。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - yaopin2
+  salewa:
+    display_name: "Salewa急救包"
+    lore:
+      - '&a内含保温毯、各种类型的绷带敷料以及医疗工具的急救包。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - yaopin3
+      scale_ratio: 32 # 在此示例中，此值大于图片原始高度（例如16）
+      y_position: 8   # 需要根据新的scale_ratio调整
+
+
+
+
+
+  # 变卖物
+  btb:
+    display_name: "实体比特币"
+    lore:
+      - '&e数字加密货币比特币的实体等价物（相当于0.2个比特币的价值）'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - btb
+  lls:
+    display_name: "劳力土潜水金腕表"
+    lore:
+      - '&e著名的劳力土牌金表。表壳是用18K黄金制作的。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - lls
+  kl:
+    display_name: "黄金骷髅指环"
+    lore:
+      - '&e骷髅形状的指环，就像一个成功打手的必带饰物。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - kl
+  jd:
+    display_name: "金蛋"
+    lore:
+      - '&e刻有"Meyer"的金蛋。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - jd
+  sz:
+    display_name: "青铜狮雕"
+    lore:
+      - '&e精致的收藏品铜狮子，非常沉。用来观赏或出售。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - sz
+  jj:
+    display_name: "金公鸡"
+    lore:
+      - '&e一只立在亚力克台子上带有Chickenprism商标的金公鸡'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - jj
+  jxl:
+    display_name: "金项链"
+    lore:
+      - '&e金脖链是摸起来非常开心的贵重珠宝。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - jxl
+  xl:
+    display_name: "项链"
+    lore:
+      - '&e戴在脖子上的小首饰，以它的材质和重量，即使是现在也是相当值钱的。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - xl
+  jz:
+    display_name: "Prokill带链奖章"
+    lore:
+      - '&e带有链子的Prokill奖章，是“契约战争”的标志性物品。现在成了遗物。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - jz
+  md:
+    display_name: "猫雕像"
+    lore:
+      - '&e一个古董猫咪雕像，以稀有的马卡萨尔木为原材料制作而成。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - md
+  md2:
+    display_name: "马雕像"
+    lore:
+      - '&e和其他地方一样，狰狞又俗气的马身雕像在塔科夫这儿似乎并没有什么用处，但在外面的某些地方，还有商人愿意买这样的破烂，这一定有什么蹊跷。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - md2
+  hz:
+    display_name: "银徽章"
+    lore:
+      - '&eSheriffEli的银徽章。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - hz
+  mz:
+    display_name: "木头钟"
+    lore:
+      - '&e设计精巧的一款双头鹰形木头钟，稀有且珍贵。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - mz
+  wjx:
+    display_name: "BEAR Buddy毛绒玩具"
+    lore:
+      - '&e塔科夫著名居民 Annemunition 的"BEAR Buddy"毛绒玩具。这可是非常稀有的收藏品！'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - wjx
+  wo:
+    display_name: "Loot Lord毛绒玩具"
+    lore:
+      - '&e塔科夫著名居民 AquaFPS 的战利品之王毛绒玩具。这可是非常稀有的收藏品！'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - wo
+  hp:
+    display_name: "古董花瓶"
+    lore:
+      - '&e私人收藏的瓷瓶，理论上也能当作啤酒罐。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - hp
+  ch:
+    display_name: "古董茶壶"
+    lore:
+      - '&e整套茶具收藏品中的一件珍贵的古董银茶具。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - ch
+  yw:
+    display_name: "Axel鹦鹉雕像"
+    lore:
+      - '&eAxel —— 实验室之鹦的雕像。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - yw
+  hl:
+    display_name: "古董火镰"
+    lore:
+      - '&e这件古怪的东西被称为火镰，是一种古代的取火装置。这也是一件古董。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - hl
+  jtbp:
+    display_name: "Veritas吉他拨片"
+    lore:
+      - '&e带有Veritas标志的高品质0.5毫米厚吉他拨片。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - jtbp
+  hz2:
+    display_name: "传奇奖章"
+    lore:
+      - '&e带有传奇击杀标记的奖章。在竞技场角斗士中十分稀有，只有完成裁判的最高难度挑战才有机会获得。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - hz2
+  gds:
+    display_name: "破旧的古董书"
+    lore:
+      - '&e一本破旧的古董书，它一定会勾起收藏家们的兴趣。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - gds
+  sd1:
+    display_name: "圣诞树装饰球（银）"
+    lore:
+      - '&e用来装饰的圣诞树玩具。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - sd1
+  sd2:
+    display_name: "圣诞树装饰球（红）"
+    lore:
+      - '&e用来装饰的圣诞树玩具。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - sd2
+  sd3:
+    display_name: "圣诞树装饰球（紫）"
+    lore:
+      - '&e用来装饰的圣诞树玩具。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - sd3
+  # 电子
+  dz:
+    display_name: "电灯泡"
+    lore:
+      - '&b经典的白炽灯。易碎，经常烧坏，光线暗淡还会消耗大量电能。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - dz
+  dz1:
+    display_name: "金色1GPhone"
+    lore:
+      - '&bGPhone 1G的橙色黄金版，背面刻有一个小小的1G商标。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - dz1
+  dz2:
+    display_name: "CPU风扇"
+    lore:
+      - '&b在原材料和基础设施紧缺的情况下，CPU风扇在一些心灵手巧的本地人手里可以发挥许多用途，比如做成给收音机充电的风力发电机、家用小电扇、甚至是房子的小型换气扇，或是替换原本沉重的扇叶。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - dz2
+  dz3:
+    display_name: "DVD光驱"
+    lore:
+      - '&b'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - dz3
+  dz4:
+    display_name: "电脑CPU"
+    lore:
+      - '&b'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - dz4
+  dz5:
+    display_name: "T形插座"
+    lore:
+      - '&b'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - dz5
+  dz6:
+    display_name: "显示卡"
+    lore:
+      - '&b显卡和风扇、图形处理器、集成电路之类的乱七八糟玩意一样，都是不错的电子元件来源。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - dz6
+  dz7:
+    display_name: "供电单元"
+    lore:
+      - '&b'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - dz7
+  dz8:
+    display_name: "内存条"
+    lore:
+      - '&b'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - dz8
+  dz9:
+    display_name: "损坏的GPhone"
+    lore:
+      - '&bGPhone 9s是前一代最著名的智能手机型号之一，然而已经坏到无法修复。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - dz9
+
+  dz10:
+    display_name: "直流变压器"
+    lore:
+      - '&b能够产生指定电压的直流电变压器。变压可以消除系统中的故障。这款变压器拥有高安全性和高质量的元件，使得它能在高负载系统中使用。'
+      - '&4[不可存储至安全箱]'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - dz10
+
+  dz11:
+    display_name: "微控制器电路板"
+    lore:
+      - '&b微控制器的印制电路板。用于制造更高级电子零件的消耗品。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - dz11
+
+
+  dz12:
+    display_name: "电子元件"
+    lore:
+      - '&b可以用于维修或制造设备、系统的电子零部件。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - dz12
+
+
+  dz13:
+    display_name: "GPS信号放大单元"
+    lore:
+      - '&b一个可调节的低噪声GPS信号放大模块，其拥有前向滤波器，输入电压范围很大。'
+      - '&4[不可存储至安全箱]'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - dz13
+
+  dz14:
+    display_name: "USB适配器"
+    lore:
+      - '&bUSB接口的电池充电器，曾是每一个家庭都不可或缺的东西。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - dz14
+
+  dz15:
+    display_name: "盖革-穆勒计数器"
+    lore:
+      - '&b通过气体放电检测电离粒子的自动记数仪器。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - dz15
+
+  dz16:
+    display_name: "电磁铁"
+    lore:
+      - '&b手工制作的电磁铁。在缺乏电子零件和马达零件的环境下是极为珍贵的东西。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - dz16
+
+  dz17:
+    display_name: "损坏的硬盘"
+    lore:
+      - '&b基于磁记录原理的随机存取存储设备，是重要的信息存储媒介。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - dz17
+
+  dz18:
+    display_name: "气体分析仪"
+    lore:
+      - '&b用于确定混合气体定量组成成分的测量装置。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - dz18
+
+  dz19:
+    display_name: "紫外线灯泡"
+    lore:
+      - '&b家用紫外线灯，是一种光源为紫外光的灯，人眼不可见。其波长位于紫光光谱与X射线辐射之间。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - dz19
+
+  dz20:
+    display_name: "节能灯泡"
+    lore:
+      - '&b相较于仍然相当普通的白炽灯而言，电灯的发光效率（光通量和功耗的比值）大大提高了。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - dz20
+
+  dz21:
+    display_name: "火花塞"
+    lore:
+      - '&b汽油内燃机使用的火花塞。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - dz21
+
+  dz22:
+    display_name: "印制电路板"
+    lore:
+      - '&b微电子产品的通用部件。是一种用于维护电子系统的重要资源。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - dz22
+
+  dz23:
+    display_name: "电源线"
+    lore:
+      - '&b计算机的220伏电源线。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - dz23
+
+  dz24:
+    display_name: "电钻"
+    lore:
+      - '&b使用电池供电的无线电钻。可用于房屋建造，家具安装以及日常修理。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - dz24
+
+  dz25:
+    display_name: "军用转速计"
+    lore:
+      - '&b测定军用车辆角速度的装置。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - dz25
+
+  dz26:
+    display_name: "相控阵单元"
+    lore:
+      - '&b高科技相控阵天线阵列，是无线电定位系统和电子战系统的组成部分。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - dz26
+
+  dz27:
+    display_name: "军用电源滤波器"
+    lore:
+      - '&b用于装甲车辆的军用电源滤波器。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - dz27
+
+  dz28:
+    display_name: "Iridium军用热成像模块"
+    lore:
+      - '&b用于军用车辆的热成像系统单元模块。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - dz28
+
+  dz29:
+    display_name: "军用电路板"
+    lore:
+      - '&b军用车辆和系统中使用的电子部件。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - dz29
+
+  dz30:
+    display_name: "军用电缆"
+    lore:
+      - '&b结构经过强化的军用电缆，面向高强度运行设备的使用需求而设计。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - dz30
+
+  dz31:
+    display_name: "螺旋散热器"
+    lore:
+      - '&b螺旋散热器用于工业级加热器。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - dz31
+
+  dz32:
+    display_name: "相位控制继电器"
+    lore:
+      - '&b保护电动机或三相电网供电电气设备的装置。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - dz32
+
+  dz33:
+    display_name: "损坏的液晶显示屏"
+    lore:
+      - '&b损坏的液晶显示器。包含许多有用的微电子零件。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - dz33
+
+  dz34:
+    display_name: "完好的液晶显示屏"
+    lore:
+      - '&b完整可工作的液晶显示器。它可以作为一种信号可视化设备用于监控系统中。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - dz34
+
+  dz35:
+    display_name: "NIXXOR镜头"
+    lore:
+      - '&b用于视频设备和安全系统的镜头。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - dz35
+
+  dz36:
+    display_name: "电动马达"
+    lore:
+      - '&b一种小型机电转换器，电能通过它被转换成机械能。是工程或生产中必不可少的东西。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - dz36
+
+  dz37:
+    display_name: "Virtex可编程处理器"
+    lore:
+      - '&b特别的军用的可编程处理器。该产品专门用于那些需要处理大量数据和最低延迟的高延迟宽带应用。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - dz37
+  dz38:
+    display_name: "VPX闪存模块"
+    lore:
+      - '&bVPX闪存模块（FSM）有着高性能、高容量的特点。还使用特殊应用集成电路（ASIC）对固态SATA存储进行AES-256 bit加密。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - dz38
+
+  dz39:
+    display_name: "Tetriz便携式游戏机"
+    lore:
+      - '&b来自某个失落文明的一件古老艺术品。Mechanic可能会用比特币来交换它。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - dz39
+
+
+  dz40:
+    display_name: "电容"
+    lore:
+      - '&b各种各样的电容，他们在电气工程中非常有用。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - dz40
+
+
+  dz41:
+    display_name: "电线"
+    lore:
+      - '&b一捆各种类型的电线。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - dz41
+
+
+  dz42:
+    display_name: "损坏的GPhone X"
+    lore:
+      - '&bWepple最新发售的手机。坏到无法使用，但是里面还有许多有用的零件。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - dz42
+
+
+  dz43:
+    display_name: "UHF RFID固定式读取器"
+    lore:
+      - '&bUHFReader是一种高性能的固定式UHF RFID识别器。基于专有的高效数字信号处理算法，支持快速的标签读写操作，识别率高。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - dz43
+
+
+  dz44:
+    display_name: "军用COFDM无线信号发射器"
+    lore:
+      - '&b双向对讲军用COFDM无线音视频数据信号传输器SG-C10。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - dz44
+  # 能源
+
+  ny1:
+    display_name: "充电宝"
+    lore:
+      - '&6大容量可充电电池。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - ny1
+
+  ny2:
+    display_name: "一号电池"
+    lore:
+      - '&6一种标准大小的多用途电池，适用于大部分的便携式电子设备。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - ny2
+
+  ny3:
+    display_name: "五号电池"
+    lore:
+      - '&6AA电池，被广泛应用在许多设备上。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - ny3
+
+  ny4:
+    display_name: "GreenBat锂电池"
+    lore:
+      - '&63.7伏电池，标称容量3400毫安时。用于照明和工程设备。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - ny4
+
+  ny5:
+    display_name: "可充电电池"
+    lore:
+      - '&6用于各种电器设备的能量积累和自主供电，也可在医疗、制造等其他领域作为备用电源使用。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - ny5
+
+  ny6:
+    display_name: "Cyclon 蓄电池组"
+    lore:
+      - '&6工业和军事设备专用蓄电池。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - ny6
+
+  ny7:
+    display_name: "汽车蓄电池"
+    lore:
+      - '&6商人们趋之若鹜的经典12V 51A铅酸车载蓄电池，他们会把它倒卖至没有电力供应的弃管地区。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - ny7
+
+  ny8:
+    display_name: "6-STEN-140-M军用电池"
+    lore:
+      - '&6增加容量的坦克电池。军规电子产品。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - ny8
+  # 易燃
+  yr1:
+    display_name: "经典火柴"
+    lore:
+      - '&c'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - yr1
+
+  yr2:
+    display_name: "Hunter火柴"
+    lore:
+      - '&c'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - yr2
+
+  yr3:
+    display_name: "Crickent打火机"
+    lore:
+      - '&c'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - yr3
+
+  yr4:
+    display_name: "Zibbo打火机"
+    lore:
+      - '&c'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - yr4
+
+  yr5:
+    display_name: "100毫升WD-40"
+    lore:
+      - '&c'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - yr5
+
+  yr6:
+    display_name: "400毫升WD-40"
+    lore:
+      - '&c'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - yr6
+
+  yr7:
+    display_name: "TP-200 砖型TNT"
+    lore:
+      - '&c'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - yr7
+
+  yr8:
+    display_name: "罐装铝热剂"
+    lore:
+      - '&c'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - yr8
+
+  yr9:
+    display_name: "SurvL幸存者打火机"
+    lore:
+      - '&c'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - yr9
+
+  yr10:
+    display_name: "“Kite”火药"
+    lore:
+      - '&c'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - yr10
+
+  yr11:
+    display_name: "“Eagle”火药"
+    lore:
+      - '&c'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - yr11
+
+  yr12:
+    display_name: "“Hawk”火药"
+    lore:
+      - '&c'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - yr12
+
+  yr13:
+    display_name: "固体燃料"
+    lore:
+      - '&c'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - yr13
+
+  yr14:
+    display_name: "燃油添加剂"
+    lore:
+      - '&c'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - yr14
+
+  yr15:
+    display_name: "#FireKlean牌枪润滑油"
+    lore:
+      - '&c'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - yr15
+
+  yr16:
+    display_name: "5升丙烷罐"
+    lore:
+      - '&c'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - yr16
+
+  yr17:
+    display_name: "野营燃料桶"
+    lore:
+      - '&c'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - yr17
+
+  yr18:
+    display_name: "金属燃料桶"
+    lore:
+      - '&c为易燃液体材料设计的金属燃料桶。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - yr18
+
+  yr19:
+    display_name: "40 度特殊燃料"
+    lore:
+      - '&c在极度严寒之下，就算是汽油也有可能会不管用。因此出门在外总得备点更牛的玩意。'
+      - '&4[不可存储至安全箱]'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - yr19
+  # 工具
+  gj1:
+    display_name: "Elite钳子"
+    lore:
+      - '&d一把用来固定、操作和切断金属线的高质量工具。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - gj1
+
+  gj2:
+    display_name: "圆嘴钳"
+    lore:
+      - '&c'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - gj2
+
+  gj3:
+    display_name: "长平头螺丝刀"
+    lore:
+      - '&c'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - gj3
+
+  gj4:
+    display_name: "平头螺丝刀"
+    lore:
+      - '&c'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - gj4
+
+  gj5:
+    display_name: "金属切割剪刀"
+    lore:
+      - '&c'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - gj5
+
+  gj6:
+    display_name: "剪线钳"
+    lore:
+      - '&c'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - gj6
+
+  gj7:
+    display_name: "针线盒"
+    lore:
+      - '&c'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - gj7
+
+  gj8:
+    display_name: "扳手"
+    lore:
+      - '&c'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - gj8
+
+  gj9:
+    display_name: "螺丝刀"
+    lore:
+      - '&c'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - gj9
+
+  gj10:
+    display_name: "施工用测量卷尺"
+    lore:
+      - '&c'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - gj10
+
+  gj11:
+    display_name: "缝纫锥"
+    lore:
+      - '&c'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - gj11
+
+  gj12:
+    display_name: "钳子"
+    lore:
+      - '&c'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - gj12
+
+  gj13:
+    display_name: "手摇钻"
+    lore:
+      - '&c'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - gj13
+
+  gj14:
+    display_name: "一套工具"
+    lore:
+      - '&c'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - gj14
+
+  gj15:
+    display_name: "Master锉刀套装"
+    lore:
+      - '&c'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - gj15
+
+  gj16:
+    display_name: "棘轮扳手"
+    lore:
+      - '&c'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - gj16
+
+  gj17:
+    display_name: "Fierce Blow重击锤"
+    lore:
+      - '&c'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - gj17
+
+  gj18:
+    display_name: "管道扳手"
+    lore:
+      - '&c'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - gj18
+
+  gj19:
+    display_name: "Bulbex剪线器"
+    lore:
+      - '&c'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - gj19
+
+  gj20:
+    display_name: "Inseq燃气管扳手"
+    lore:
+      - '&c'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - gj20
+  # 日常
+  rc1:
+    display_name: "Deadlyslob的胡须油"
+    lore:
+      - '&aDeadlySlob的枫糖浆味胡须保养油。时尚又稀有！'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - rc1
+
+  rc2:
+    display_name: "肥皂"
+    lore:
+      - '&a一块普通的肥皂。请勿食用！'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - rc2
+
+  rc3:
+    display_name: "卫生纸"
+    lore:
+      - '&a一卷干净精致的双层卫生纸，这个黑暗时代的宝藏。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - rc3
+
+  rc4:
+    display_name: "Ortodontox牙膏"
+    lore:
+      - '&a10 个牙医中有 9 个推荐使用本牙膏。唯一不推荐的牙医显然精神不正常，这种水平的家伙只配推荐鞋油。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - rc4
+
+  rc5:
+    display_name: "Schaman洗发水"
+    lore:
+      - '&aSchaman洗发水有独特的甜瓜味、烧烤味和公交车站味。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - rc5
+
+  rc6:
+    display_name: "Repellent杀虫剂"
+    lore:
+      - '&a防蚊虫、苍蝇和其他小昆虫的气雾剂。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - rc6
+
+  rc7:
+    display_name: "一包氯石灰"
+    lore:
+      - '&a氯石灰是次氯酸盐、氯化物和氢氧化钙的一种高度危险的技术混合物。广泛用于漂白和消毒。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - rc7
+
+  rc8:
+    display_name: "Smoked Chimney下水道清洁剂"
+    lore:
+      - '&a无机碱溶液清洁剂，添加活性成分。用于清洁厕所、管道和排水管。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - rc8
+
+  rc9:
+    display_name: "碳酸氢钠"
+    lore:
+      - '&a碳酸和钠的酸性盐，碳酸氢钠（小苏打）。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - rc9
+
+  rc10:
+    display_name: "Clin 玻璃清洁剂"
+    lore:
+      - '&aClin 牌玻璃清洁剂，有人想在自家车库里捣鼓化学实验的时候，这玩意是最常见的原料来源。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - rc10
+
+  rc11:
+    display_name: "Ox漂白剂"
+    lore:
+      - '&aOx特效去污漂白剂。漂白剂可以破坏化学键，因此它被广泛运用于化工生产中。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - rc11
+
+  rc12:
+    display_name: "Paid杀蟑剂"
+    lore:
+      - '&a杀灭蟑螂和蚂蚁的有效手段。是维护藏身处必不可少的东西。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - rc12
+
+  rc13:
+    display_name: "碱性换热器表面洗涤剂"
+    lore:
+      - '&a碱能有效地去除管道、加热器中的各种沉积物。也被用于手工化工生产。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - rc13
+
+  rc14:
+    display_name: "LVNDMARK的老鼠药"
+    lore:
+      - '&a用来对付撤离点老六和工厂老鼠的特效药。包含“特别”的配方。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - rc14
+
+  rc15:
+    display_name: "罐装白盐"
+    lore:
+      - '&a就是做饭用的食盐。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - rc15
+
+  rc16:
+    display_name: "打印纸"
+    lore:
+      - '&a办公级的打印机和复印机用纸。当然，它也可以用来写字。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - rc16
+
+  rc17:
+    display_name: "牙膏"
+    lore:
+      - '&a现在在这座城市里，刷牙不是一件必要的事情，但如果你有这个机会，为什么不呢？'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - rc17
+
+  rc18:
+    display_name: "SHYSHKA 圣诞树续命药水"
+    lore:
+      - '&a专门设计用来保存圣诞树的药剂，让针叶能长时间保持青翠。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - rc18
+  # 建筑
+  jz1:
+    display_name: "模拟温度计"
+    lore:
+      - '&7测量和控制液体材料温度的温度计。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - jz1
+
+  jz2:
+    display_name: "硅胶管"
+    lore:
+      - '&7直径20毫米的硅胶管。在化学工业，特别是私酒生产中不可或缺的东西。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - jz2
+
+  jz3:
+    display_name: "压力表"
+    lore:
+      - '&7测量管道、储罐和其他隔离系统中压力的装置。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - jz3
+
+  jz4:
+    display_name: "Poxeram冷焊膏"
+    lore:
+      - '&7它是一种高度可塑性粘合剂组合物。它由环氧树脂组成，是一种含有金属粉末的双组分物质。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - jz4
+
+  jz5:
+    display_name: "KEKTAPE管道胶带"
+    lore:
+      - '&7KEKTAPE虽然无法修补你在塔科夫的艰苦命运，但它能修补船，能把水族箱的洞堵住。KEKTAPE能用来做很多事情。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - jz5
+
+  jz6:
+    display_name: "波纹软管"
+    lore:
+      - '&7花园中使用的波纹软管，藏身处可能会用得上。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - jz6
+
+  jz7:
+    display_name: "一包螺钉"
+    lore:
+      - '&7自攻螺钉是一种紧固产品，头部有特殊的外螺纹，在与要连接的物体的孔内有一个内部螺纹。用于安装木制、石膏和塑料面板。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - jz7
+
+  jz8:
+    display_name: "有机玻璃片"
+    lore:
+      - '&7丙烯酸树脂为原料的有机玻璃，是由甲基丙烯酸甲酯聚合而成的乙烯基聚合物，该种热塑性透明塑料以宝克力公司的产品最为知名。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - jz8
+
+  jz9:
+    display_name: "金属零件"
+    lore:
+      - '&7一堆各种金属部件、夹具以及垫圈之类的东西，对于维修各类机械设备以及配件保养可以说是相当有用。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - jz9
+
+  jz10:
+    display_name: "一包钉子"
+    lore:
+      - '&7一包建筑用钉子。在如今混乱的状况下，它被用做建造临时庇护所、简易小屋或其他需要固定的东西。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - jz10
+
+  jz11:
+    display_name: "Shustrilo发泡密封胶"
+    lore:
+      - '&7Shustrilo是一种泡沫枪用高级专业密封泡沫。喷桶中可以喷出大量泡沫，拥有改良的强度参数以及稳定性等。Shustrilo的产品拥有极高的质量以保证其使用效果。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - jz11
+
+  jz12:
+    display_name: "Xenomorph发泡密封胶"
+    lore:
+      - '&7Xenomorph是一种发泡密封胶，与一个小涂抹管配合使用。它使用方便且具有优良的微孔结构和较高的机械强度，是一种凝固过程中体积加倍的耗材，对大多数建筑材料，如木材、混凝土、石材、金属等都具有优异的附着力。该产品不含任何氯氟碳喷射剂，能够可靠又实惠地解决密封和填充空隙的问题。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - jz12
+
+  jz13:
+    display_name: "军用波纹软管"
+    lore:
+      - '&7军用波纹软管被用在通风系统和空气过滤单元中。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - jz13
+
+  jz14:
+    display_name: "螺栓"
+    lore:
+      - '&7一些需要和螺母组合使用的螺栓，用来把东西固定到位。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - jz14
+
+  jz15:
+    display_name: "管道胶带"
+    lore:
+      - '&7管道胶带是一种泛用工具，普遍被用于固定本不该松动的物体。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - jz15
+
+  jz16:
+    display_name: "螺母"
+    lore:
+      - '&7一些普通的螺母，没什么大用。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - jz16
+
+  jz17:
+    display_name: "绝缘胶带"
+    lore:
+      - '&7虽然绝缘胶带主要用来给电线绝缘，但这个东西的用武之地能被聪明人无限放大。例如一些简单的维护，将散件进行拼凑，捆绑物品，对握把进行包裹从而起到防滑作用等。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - jz17
+  # 医疗
+  yl1:
+    display_name: "一次性注射器"
+    lore:
+      - '&2一次性注射器，带有独立无菌包装。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - yl1
+
+  yl2:
+    display_name: "一堆药"
+    lore:
+      - '&2各种药品、药物，是药品生产原料及装在个人急救箱里的必备品。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - yl2
+
+  yl3:
+    display_name: "医疗工具"
+    lore:
+      - '&2一套手术所用的器材。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - yl3
+
+  yl4:
+    display_name: "Aquapeps饮用水净化片"
+    lore:
+      - '&2这些片剂可以将已被病原体污染的水源制备成饮用水。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - yl4
+
+  yl5:
+    display_name: "过氧化氢溶液（双氧水）"
+    lore:
+      - '&2过氧化氢也被当作清洁和消毒伤口的药物。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - yl5
+
+  yl6:
+    display_name: "盐水溶液"
+    lore:
+      - '&2生理盐水溶液，其渗透压等于血液的渗透压。生理学溶液有好几种类型，其成分取决于其应用目的。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - yl6
+
+  yl7:
+    display_name: "OLOLO瓶装复合维生素"
+    lore:
+      - '&2一瓶复合维生素。你在免疫力下降时需要它。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - yl7
+
+  yl8:
+    display_name: "医用输血工具"
+    lore:
+      - '&2一套输血时必需的医疗用具。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - yl8
+
+  yl9:
+    display_name: "检眼镜"
+    lore:
+      - '&2用于眼部检查诊断的医疗设备。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - yl9
+
+  yl10:
+    display_name: "便携式除颤器"
+    lore:
+      - '&2任何人在任何时间、任何地点都可能发生心脏骤停（SCA）。Philpils在它的HeartStart除颤器中，利用智能双相方波除颤技术，能够以较低的能量产生一种高效的强电流冲击除颤，来最小化除颤副作用。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - yl10
+
+  yl11:
+    display_name: "LEDX皮肤透照仪"
+    lore:
+      - '&2一种设计用来精准确认皮下静脉位置的装置。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - yl11
+  # 情报
+  qb1:
+    display_name: "袖珍日记"
+    lore:
+      - '&d皮革封面的日记本，上面记录了很多名人的名字，地址和电话号码。对某些人而言这本日记很有用。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - qb1
+  qb2:
+    display_name: "技术指导文件"
+    lore:
+      - '&d内含技术指导的手册。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - qb2
+  qb3:
+    display_name: "日记"
+    lore:
+      - '&d皮革封面的日记本，上面记录了很多名人的名字，地址和电话号码。对某些人而言这本日记很有用。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - qb3
+  qb4:
+    display_name: "地形调查地图"
+    lore:
+      - '&d一套写有调查计划的当地地形图，它是高价值的侦查用品。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - qb4
+  qb5:
+    display_name: "串口硬盘"
+    lore:
+      - '&d带有强化外壳的串口硬盘，用于军工行业的数据存储。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - qb5
+  qb6:
+    display_name: "《天雷地火》录像带"
+    lore:
+      - '&d一盘家用录像带，里面有一部关于未来杀手的 1990 年代动作片。看样子是从 Prokhodimets 录像带店租来的。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - qb6
+  qb7:
+    display_name: "BakeEzy烹饪书"
+    lore:
+      - '&dBakeEzy，一本关于美味健康食物的书，它记载了从商业宴会到车库酗酒派对的各种菜肴。祝你好胃口！'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - qb7
+  qb8:
+    display_name: "固态硬盘"
+    lore:
+      - '&d固态硬盘，用于存储数据，有着优于机械硬盘的读写性能。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - qb8
+  qb9:
+    display_name: "加密U盘"
+    lore:
+      - '&dTerraGroup的员工们经常使用这种加密U盘，他们一定是把机密资料藏在到里面了。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - qb9
+  qb10:
+    display_name: "加密磁带盒"
+    lore:
+      - '&d特制的加密磁带。看起来很有可能装有重要且珍贵的数据。磁介质存储依然很重要，其高度可靠性就是原因之一。。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - qb10
+  qb11:
+    display_name: "军用闪存装置"
+    lore:
+      - '&d一个军用加密硬盘。它不仅是内部加密的，还有着加强的物理结构。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - qb11
+  qb12:
+    display_name: "硅基光电集成电路教材"
+    lore:
+      - '&d一本硅基光电集成电路的手册，关于微电子元件的知识仓库。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - qb12
+  qb13:
+    display_name: "先进电子材料教材"
+    lore:
+      - '&d一般关于先进电子材料和元器件的教材，制作微电子元件极其重要的稀缺手册。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - qb13
+  qb14:
+    display_name: "情报文件夹"
+    lore:
+      - '&d一个装有各种文件的文件夹，可能对某些人来说很有用。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - qb14
+  qb15:
+    display_name: "TerraGroup 蓝色文件夹 材料"
+    lore:
+      - '&d装有TerraGroup公司文件的蓝色文件夹。在黑市上非常值钱。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - qb15
+  # 货币
+  hb:
+    display_name: "GP币"
+    lore:
+      - '&4一枚外观奇特的金币。传闻在契约战争期间，双方经常用这种代币向 PMC 支付薪酬。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - hb
+  hb1:
+    display_name: "RUB【卢布】"
+    lore:
+      - '&4一些仍有价值的俄罗斯卢布。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - hb1
+  hb2:
+    display_name: "USD【美元】"
+    lore:
+      - '&4一些美钞。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - hb2
+  hb3:
+    display_name: "EUR【欧元】"
+    lore:
+      - '&4一些欧元钞票。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - hb3
+  # 其他
+  qt1:
+    display_name: "阿波伦联盟香烟 "
+    lore:
+      - '&7Apollon Soyuz牌香烟，一口让你爽上天。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - qt1
+  qt2:
+    display_name: "马宝路香烟"
+    lore:
+      - '&7马宝路香烟在当地富有的烟民中大受欢迎。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - qt2
+  qt3:
+    display_name: "云尔斯顿香烟"
+    lore:
+      - '&7说到典型的街头朋克，怎么能没有云尔斯顿香烟呢！'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - qt3
+  qt4:
+    display_name: "无彩香烟"
+    lore:
+      - '&7无彩香烟还没从商贩手中卖出去就被他们自己抽光了。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - qt4
+  qt5:
+    display_name: "Majaica咖啡"
+    lore:
+      - '&7100% Arabica Coffee Majaica咖啡——即使经过长期储存也依旧不失风味。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - qt5
+  qt6:
+    display_name: "42nd Signature Blend英式茶"
+    lore:
+      - '&7一盒42nd Signature Blend英式茶，为鉴赏家而生。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - qt6
+  qt7:
+    display_name: "防撕布料"
+    lore:
+      - '&7防撕织物是机织物，通常由尼龙制成，使用一种特殊的加固技术，使其能够抵抗撕扯。用于特种和军用服装及装备的生产。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - qt7
+  qt8:
+    display_name: "Cordura聚酰胺面料"
+    lore:
+      - '&7这是一种聚酰胺织物，由于线的特殊结构（由切割和加捻的纤维制成），它比普通尼龙（也由聚酰胺组成）的耐磨性高四倍。在拉伸强度和耐磨性方面明显优于传统织物。用于制造各种用途的装备：包、背包及其附加物品、腰带和包带、携带武器的箱子等。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - qt8
+  qt9:
+    display_name: "绒布布料"
+    lore:
+      - '&7用于生产各种军用和民用服装的绝缘、轻质、防水织物。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - qt9
+  qt10:
+    display_name: "芳纶纤维布料"
+    lore:
+      - '&7芳纶纤维是一类耐热且坚固的合成纤维。它们应用于航空航天和军事，用于弹道级的防弹织物和防弹复合材料，自行车轮胎，船舶缆绳，船体增强材料以及石棉替代品。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - qt10
+  qt11:
+    display_name: "武器零件"
+    lore:
+      - '&7各种用于替换武器易损件的零件，也可以用来自制武器。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - qt11
+  qt12:
+    display_name: "一罐Dr. Lupo的咖啡豆"
+    lore:
+      - '&7这就是鼎鼎有名的Dr.Lupo牌特大咖啡豆，这玩意真的超大！在烘培咖啡豆的时候用的都是最硬核的法子，绝对邦硬。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - qt12
+  qt13:
+    display_name: "记者证（为NoiceGuy签发）"
+    lore:
+      - '&7签发给塔科夫知名记者NoiceGuy的记者证。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - qt13
+  qt14:
+    display_name: "UZRGM手榴弹引信"
+    lore:
+      - '&7统一引信手榴弹部件——与UZRG不同，它在铝衬套内含有一种燃烧稳定性高的缓燃烟火剂成分和铝套管内的叠氮化物雷管胶囊。是制造手榴弹的重要部件。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - qt14
+  qt15:
+    display_name: "OFZ 30х160毫米炮弹"
+    lore:
+      - '&7用于装甲车和武装直升机上30毫米2A42机关炮的30毫米高爆破片弹。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - qt15
+  qt16:
+    display_name: "尼龙绳索"
+    lore:
+      - '&7一根轻量化的尼龙绳索，最初是当作降落伞绳索来使用。可以同时满足多种军用和民用需求。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - qt16
+  qt17:
+    display_name: "滤水器"
+    lore:
+      - '&7活性炭滤水器用于工业级食品生产及家中。用于净化水中有害杂质。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - qt17
+  qt18:
+    display_name: "防毒面具滤罐"
+    lore:
+      - '&7金属壳内含过滤和吸收盒（FPK），适用于GP-7K防毒面具。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - qt18
+  qt19:
+    display_name: "FP-100过滤吸收器"
+    lore:
+      - '&7过滤吸收器FP-100设计用于净化化工、放射性粉尘和细菌（生物）气溶胶及各行业产生的污染空气。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - qt19
+  qt20:
+    display_name: "狗牌"
+    lore:
+      - '&7用于在战场环境下快速识别死者与伤员身份的军用身份识别牌。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - qt20
+  qt21:
+    display_name: "Arseniy包装荞麦"
+    lore:
+      - '&7在困难时期，没有什么能比荞麦更值钱了。它就是食物之王，颗粒黄金。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - qt21
+  qt22:
+    display_name: "盒装奥利维耶沙拉"
+    lore:
+      - '&7就算是战争期间，老兵们仍然会尽一切努力庆祝节日的到来。俄式奥利维耶沙拉是新年夜餐桌上的主要点缀。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - qt22
+  qt23:
+    display_name: "一罐酸黄瓜"
+    lore:
+      - '&7罐子要么是几个月前封上的，要么就得是几年前了。现在城市里可没几个人会费心思腌渍新鲜的酸黄瓜了。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - qt23
+  qt24:
+    display_name: "《末路航班》海报"
+    lore:
+      - '&7虽然这部惊悚片没能在电影节拿下任何奖项，但票房成绩还是很不错的，片方挣了一大笔钱。导演 Yulin Kontorsky 估计已经乐开花了。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - qt24
+  qt25:
+    display_name: "野牛 vs 复仇者海报"
+    lore:
+      - '&7开出巨额价码为竞技场招募角斗士的广告。许多塔科夫市民都跃跃欲试想要赚些快钱，哪怕是送命也吓不倒他们。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - qt25
+  qt26:
+    display_name: "末日高速海报"
+    lore:
+      - '&7佚名艺术家所构想的 2028 年高速公路荒废的景象。这究竟是异想天开，还是沉重的预言？'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - qt26
+  qt27:
+    display_name: "RUN 海报"
+    lore:
+      - '&7不言自明的海报作品。无论挂在正门还是逃生出口都很有特色。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - qt27
+  qt28:
+    display_name: "不同寻常的皮具吊带海报"
+    lore:
+      - '&7看起来现在的塔科夫不太可能有类似的装备。从海报的状况来看，显然是和平时期制作的。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - qt28
+  qt29:
+    display_name: "女郎海报"
+    lore:
+      - '&7简单的女郎海报，保存状况不是太理想，但你恐怕也找不到第二张更好的。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - qt29
+  qt30:
+    display_name: "Killa小迷妹海报"
+    lore:
+      - '&7这张海报上是一位Killa的小迷妹。尽管纸上有划痕和折痕，但你仍然能看出之前的主人非常珍惜这张海报。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - qt30
+  qt31:
+    display_name: "Killa 与 Tagilla 海报"
+    lore:
+      - '&7绘有 Killa 和 Tagila 漫改娘化形象的海报，如果是真的就好了。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - qt31
+  # 注射器
+  zsq1:
+    display_name: "SJ6 TGLabs战斗兴奋剂注射器"
+    lore:
+      - '&c战斗兴奋剂。在战斗前注射能够提高身体能力。兴奋剂被允许供特种作战单位使用。由Terra集团 Labs开发，上面有SJ6的标记。有副作用。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - zsq1
+  zsq2:
+    display_name: "Propital"
+    lore:
+      - '&c军用药物。通过增加嘌呤和嘧啶碱基、RNA、功能性酶促细胞元素的生物合成来刺激再生过程。能够增加新陈代谢、健康和生命力。但是它有长期的副作用。只允许专业医师和护理人员使用。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - zsq2
+  zsq3:
+    display_name: "Zagustin止血剂"
+    lore:
+      - '&c军用药物。抑制血纤维蛋白的催化并减慢其向溶纤维蛋白酵素的转化，暂时止血并且增加流血抗性。有导致严重脱水的副作用。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - zsq3
+  zsq4:
+    display_name: "eTG-change再生兴奋剂注射器"
+    lore:
+      - '&c强大的再生过程促进剂。用于伤员受伤后或重伤员运输过程中的快速恢复，只允许专业医师和护理人员使用。有强副作用。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - zsq4
+  zsq5:
+    display_name: "M.U.L.E. 兴奋剂"
+    lore:
+      - '&c肌肉超大型激励器。它被用来在长途行军之前扩展身体的能力。它能使身体长时间承受更多的重量。它在交通不便地区的作战行动中显示了有效性。授权特种部队士兵使用。由 TerraGroup 实验室开发，标有 M. U. L. E 的记号。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - zsq5
+  zsq6:
+    display_name: "Obdolbos 2 鸡尾酒兴奋剂注射器"
+    lore:
+      - '&c装有Sanitar自制药剂的注射器。这是那款老产品的全新版本。看起来，TerraGroup实验室本身的关闭并没有阻止其实验的进行。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - zsq6
+
+
+
+  # 钥匙
+  ysk:
+    display_name: "访问钥匙卡"
+    lore:
+      - '&f一次性的Terragroupp实验室访问钥匙卡'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - ysk
+  ysk1:
+    display_name: "钥匙卡·蓝"
+    lore:
+      - '&b用来进入特定房间的钥匙。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - ysk1
+  ysk2:
+    display_name: "钥匙卡·黄"
+    lore:
+      - '&e用来进入特定房间的钥匙。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - ysk2
+  ysk3:
+    display_name: "钥匙卡·绿"
+    lore:
+      - '&a用来进入特定房间的钥匙。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - ysk3
+  ysk4:
+    display_name: "钥匙卡·红"
+    lore:
+      - '&c用来进入特定房间的钥匙。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - ysk4
+  ysk5:
+    display_name: "钥匙卡·黑"
+    lore:
+      - '&7用来进入特定房间的钥匙。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - ysk5
+  ysk6:
+    display_name: "钥匙卡·紫"
+    lore:
+      - '&d用来进入特定房间的钥匙。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - ysk6
+  ysk7:
+    display_name: "钥匙卡·橙"
+    lore:
+      - '&6用来进入特定房间的钥匙。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - ysk7
+  ysk8:
+    display_name: "蓝色记号钥匙卡"
+    lore:
+      - '&3一次性塑料钥匙卡，上面有一道古怪的蓝色记号，大概是钥匙卡的主人为了辨识而留下的。被记号遮挡的标志与 TerraGroup 实验室的很像。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - ysk8
+  ysk9:
+    display_name: "Labrys 访问钥匙卡"
+    lore:
+      - '&0解锁 Knossos 地下设施进入权限的钥匙卡。卡面图案明显参照了古希腊神话中的米诺陶（牛头人）形象，但奇怪的是，印象中塔科夫从来就没有过什么米诺陶主题乐园。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - ysk9
+  ys1:
+    display_name: "BK 符号钥匙"
+    lore:
+      - '&4标着房间号的地方刻满了奇怪的符号。'
+      - '&4这把钥匙上沾满了血污，显然被粗暴地使用过很多次，'
+      - '&4至多再用几次就会断掉。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - ys1
+  ys2:
+    display_name: "VO 符号钥匙"
+    lore:
+      - '&4标着房间号的地方刻满了奇怪的符号。'
+      - '&4这把钥匙上沾满了血污，显然被粗暴地使用过很多次，'
+      - '&4至多再用几次就会断掉。'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - ys2
+
+  # 安全箱
+
+  2x2:
+    display_name: "Alpha安全箱使用权限"
+    lore:
+      - '&7只有那些最早部署到塔科夫的PMC老兵们才会拥有的专属安全箱。'
+      - ''
+      - ''
+      - '&8有效时间: ∞ '
+      - '&f使用后获得4格空间安全箱'
+      - ''
+      - '&4右键激活使用权'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - 2x2
+  2x3:
+    display_name: "Beta安全箱"
+    lore:
+      - '&7只有那些最早部署到塔科夫的PMC老兵们才会拥有的专属安全箱。'
+      - ''
+      - ''
+      - '&8有效时间: ∞ '
+      - '&f使用后获得6格空间安全箱'
+      - ''
+      - '&4右键激活使用权'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - 2x3
+  2x4:
+    display_name: "Epsilon安全箱"
+    lore:
+      - '&7TerraGroup的最新发明——Epsilon安全箱。'
+      - ''
+      - ''
+      - '&8有效时间: ∞ '
+      - '&f使用后获得8格空间安全箱'
+      - ''
+      - '&4右键激活使用权'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - 2x4
+  3x3:
+    display_name: "Gamma安全箱"
+    lore:
+      - '&7只有那些最早部署到塔科夫的PMC老兵们才会拥有的专属安全箱。'
+      - ''
+      - ''
+      - '&8有效时间: ∞ '
+      - '&f使用后获得9格空间安全箱'
+      - ''
+      - '&4右键激活使用权'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - 3x3
+  3x4:
+    display_name: "Kappa安全箱"
+    lore:
+      - '&7Terragroup的秘密发明——Kappa安全箱。'
+      - ''
+      - ''
+      - '&8有效时间: ∞ '
+      - '&f使用后获得12格空间安全箱'
+      - ''
+      - '&4右键激活使用权'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - 3x4
+  3x5:
+    display_name: "Kappa安全箱（升级版）"
+    lore:
+      - '&7TerraGroup的秘密发明，在落入邪教徒之手后按照他们的独特喜好进行了改造。'
+      - ''
+      - ''
+      - '&8有效时间: ∞ '
+      - '&f使用后获得15格空间安全箱'
+      - ''
+      - '&4右键激活使用权'
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - 3x5

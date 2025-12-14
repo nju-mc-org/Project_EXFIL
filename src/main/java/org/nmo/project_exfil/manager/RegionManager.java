@@ -38,6 +38,11 @@ public class RegionManager {
     private final Map<String, CombatRegion> combatRegions = new HashMap<>();
     private final Map<String, NPCRegion> npcRegions = new HashMap<>();
     private final Map<String, LootRegion> lootRegions = new HashMap<>();
+
+    private final Map<String, Map<String, ExtractionRegion>> extractionRegionsByWorld = new HashMap<>();
+    private final Map<String, List<NPCRegion>> npcRegionsByWorld = new HashMap<>();
+    private final Map<String, List<LootRegion>> lootRegionsByWorld = new HashMap<>();
+
     private final File regionsFile;
     private YamlConfiguration regionsConfig;
 
@@ -100,6 +105,36 @@ public class RegionManager {
                 BoundingBox box = loadBoundingBox(npcSection, key);
                 npcRegions.put(key, new NPCRegion(worldName, box, count));
             }
+        }
+
+        ConfigurationSection lootSection = regionsConfig.getConfigurationSection("loot");
+        if (lootSection != null) {
+            for (String key : lootSection.getKeys(false)) {
+                String worldName = lootSection.getString(key + ".world");
+                int count = lootSection.getInt(key + ".count");
+                BoundingBox box = loadBoundingBox(lootSection, key);
+                lootRegions.put(key, new LootRegion(worldName, box, count));
+            }
+        }
+
+        rebuildCaches();
+    }
+
+    private void rebuildCaches() {
+        extractionRegionsByWorld.clear();
+        for (Map.Entry<String, ExtractionRegion> entry : regions.entrySet()) {
+            ExtractionRegion region = entry.getValue();
+            extractionRegionsByWorld.computeIfAbsent(region.getWorldName(), k -> new HashMap<>()).put(entry.getKey(), region);
+        }
+
+        npcRegionsByWorld.clear();
+        for (NPCRegion region : npcRegions.values()) {
+            npcRegionsByWorld.computeIfAbsent(region.getWorldName(), k -> new java.util.ArrayList<>()).add(region);
+        }
+
+        lootRegionsByWorld.clear();
+        for (LootRegion region : lootRegions.values()) {
+            lootRegionsByWorld.computeIfAbsent(region.getWorldName(), k -> new java.util.ArrayList<>()).add(region);
         }
     }
 
@@ -180,6 +215,8 @@ public class RegionManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        rebuildCaches();
     }
 
     public Region getPlayerSelection(Player player) {
@@ -220,9 +257,8 @@ public class RegionManager {
 
     public boolean isPlayerInExtractionPoint(Player player, String templateWorldName) {
         Location loc = player.getLocation();
-        for (ExtractionRegion region : regions.values()) {
-            // Check if region belongs to the template world
-            if (region.getWorldName().equals(templateWorldName) && region.getBox().contains(loc.toVector())) {
+        for (ExtractionRegion region : getExtractionRegions(templateWorldName).values()) {
+            if (region.getBox().contains(loc.toVector())) {
                 return true;
             }
         }
@@ -231,8 +267,8 @@ public class RegionManager {
     
     public String getExtractionPointName(Player player, String templateWorldName) {
         Location loc = player.getLocation();
-        for (Map.Entry<String, ExtractionRegion> entry : regions.entrySet()) {
-            if (entry.getValue().getWorldName().equals(templateWorldName) && entry.getValue().getBox().contains(loc.toVector())) {
+        for (Map.Entry<String, ExtractionRegion> entry : getExtractionRegions(templateWorldName).entrySet()) {
+            if (entry.getValue().getBox().contains(loc.toVector())) {
                 return entry.getKey();
             }
         }
@@ -298,13 +334,8 @@ public class RegionManager {
     }
     
     public Map<String, ExtractionRegion> getExtractionRegions(String templateWorldName) {
-        Map<String, ExtractionRegion> result = new HashMap<>();
-        for (Map.Entry<String, ExtractionRegion> entry : regions.entrySet()) {
-            if (entry.getValue().getWorldName().equals(templateWorldName)) {
-                result.put(entry.getKey(), entry.getValue());
-            }
-        }
-        return result;
+        Map<String, ExtractionRegion> result = extractionRegionsByWorld.get(templateWorldName);
+        return result != null ? result : java.util.Collections.emptyMap();
     }
 
     public boolean deleteExtractionRegion(String name) {
@@ -357,23 +388,13 @@ public class RegionManager {
     }
 
     public List<NPCRegion> getNPCRegionsForWorld(String templateWorldName) {
-        List<NPCRegion> list = new java.util.ArrayList<>();
-        for (NPCRegion region : npcRegions.values()) {
-            if (region.getWorldName().equals(templateWorldName)) {
-                list.add(region);
-            }
-        }
-        return list;
+        List<NPCRegion> list = npcRegionsByWorld.get(templateWorldName);
+        return list != null ? list : java.util.Collections.emptyList();
     }
 
     public List<LootRegion> getLootRegionsForWorld(String templateWorldName) {
-        List<LootRegion> list = new java.util.ArrayList<>();
-        for (LootRegion region : lootRegions.values()) {
-            if (region.getWorldName().equals(templateWorldName)) {
-                list.add(region);
-            }
-        }
-        return list;
+        List<LootRegion> list = lootRegionsByWorld.get(templateWorldName);
+        return list != null ? list : java.util.Collections.emptyList();
     }
 
     public CombatRegion getCombatRegion(String templateWorldName) {

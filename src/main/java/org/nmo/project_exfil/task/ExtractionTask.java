@@ -33,14 +33,17 @@ public class ExtractionTask extends BukkitRunnable {
 
     @Override
     public void run() {
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            checkExtraction(player);
+        for (Map.Entry<UUID, GameInstance> entry : gameManager.getPlayerInstancesView().entrySet()) {
+            Player player = Bukkit.getPlayer(entry.getKey());
+            if (player == null || !player.isOnline()) {
+                extractionTimers.remove(entry.getKey());
+                continue;
+            }
+            checkExtraction(player, entry.getValue());
         }
     }
 
-    private void checkExtraction(Player player) {
-        GameInstance instance = gameManager.getPlayerInstance(player);
-        if (instance == null) return;
+    private void checkExtraction(Player player, GameInstance instance) {
         
         boolean inExtractionZone = regionManager.isPlayerInExtractionPoint(player, instance.getTemplateName());
 
@@ -75,7 +78,7 @@ public class ExtractionTask extends BukkitRunnable {
             Title title = Title.title(plugin.getLanguageManager().getMessage("exfil.extract.title"), subComp, times);
             player.showTitle(title);
             
-            gameManager.teleportToLobby(player);
+            gameManager.extractToLobby(player);
         } else {
             extractionTimers.put(player.getUniqueId(), timeLeft);
             

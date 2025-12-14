@@ -21,8 +21,11 @@ import org.bukkit.persistence.PersistentDataType;
 
 public class StashManager {
 
+    private static final int PAGE_SIZE = 45;
+
     private final ProjectEXFILPlugin plugin;
     private final File userDataFolder;
+    private final java.util.Map<UUID, Object> fileLocks = new java.util.concurrent.ConcurrentHashMap<>();
 
     public StashManager(ProjectEXFILPlugin plugin) {
         this.plugin = plugin;
@@ -32,40 +35,57 @@ public class StashManager {
         }
     }
 
+    private Object lockFor(UUID uuid) {
+        return fileLocks.computeIfAbsent(uuid, k -> new Object());
+    }
+
     public void saveStash(Player player, ItemStack[] contents, int page) {
         File userFile = new File(userDataFolder, player.getUniqueId() + ".yml");
-        YamlConfiguration config = YamlConfiguration.loadConfiguration(userFile);
-        
-        config.set("stash.page_" + page, contents);
-        
-        try {
-            config.save(userFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-            player.sendMessage("§cError saving stash data!");
+
+        ItemStack[] snapshot = new ItemStack[contents.length];
+        for (int i = 0; i < contents.length; i++) {
+            ItemStack it = contents[i];
+            snapshot[i] = (it == null) ? null : it.clone();
         }
+
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            synchronized (lockFor(player.getUniqueId())) {
+                YamlConfiguration config = YamlConfiguration.loadConfiguration(userFile);
+                config.set("stash.page_" + page, snapshot);
+                try {
+                    config.save(userFile);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Bukkit.getScheduler().runTask(plugin, () -> player.sendMessage("§cError saving stash data!"));
+                }
+            }
+        });
     }
 
     public void removeStashPage(Player player, int page) {
         File userFile = new File(userDataFolder, player.getUniqueId() + ".yml");
         if (!userFile.exists()) return;
-        
-        YamlConfiguration config = YamlConfiguration.loadConfiguration(userFile);
-        config.set("stash.page_" + page, null);
-        
-        try {
-            config.save(userFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            synchronized (lockFor(player.getUniqueId())) {
+                YamlConfiguration config = YamlConfiguration.loadConfiguration(userFile);
+                config.set("stash.page_" + page, null);
+                try {
+                    config.save(userFile);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     public void sortStash(Player player) {
         File userFile = new File(userDataFolder, player.getUniqueId() + ".yml");
         if (!userFile.exists()) return;
 
-        YamlConfiguration config = YamlConfiguration.loadConfiguration(userFile);
-        if (!config.isConfigurationSection("stash")) return;
+        synchronized (lockFor(player.getUniqueId())) {
+            YamlConfiguration config = YamlConfiguration.loadConfiguration(userFile);
+            if (!config.isConfigurationSection("stash")) return;
 
         // 1. Collect all items from all pages
         List<ItemStack> allItems = new ArrayList<>();
@@ -157,6 +177,7 @@ public class StashManager {
             e.printStackTrace();
             player.sendMessage("§cError saving sorted stash!");
         }
+        }
     }
 
     private ItemStack cleanItem(ItemStack item) {
@@ -172,13 +193,123 @@ public class StashManager {
         return item;
     }
 
+    public void depositItemsAsync(Player player, List<ItemStack> items) {
+        if (items == null || items.isEmpty()) return;
+        File userFile = new File(userDataFolder, player.getUniqueId() + ".yml");
+
+        List<ItemStack> snapshot = new ArrayList<>();
+        for (ItemStack it : items) {
+            if (it != null && !it.getType().isAir()) snapshot.add(cleanItem(it.clone()));
+        }
+        if (snapshot.isEmpty()) return;
+
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            synchronized (lockFor(player.getUniqueId())) {
+                YamlConfiguration config = YamlConfiguration.loadConfiguration(userFile);
+                if (!config.isConfigurationSection("stash")) {
+                    config.createSection("stash");
+                }
+
+                // Load existing pages
+                int maxPage = -1;
+                if (config.isConfigurationSection("stash")) {
+                    for (String key : config.getConfigurationSection("stash").getKeys(false)) {
+                        if (key.startsWith("page_")) {
+                            try {
+                                maxPage = Math.max(maxPage, Integer.parseInt(key.substring(5)));
+                            } catch (NumberFormatException ignored) {
+                            }
+                        }
+                    }
+                }
+                if (maxPage < 0) maxPage = 0;
+
+                List<ItemStack[]> pages = new ArrayList<>();
+                for (int page = 0; page <= maxPage; page++) {
+                    pages.add(loadPageArray(config, page));
+                }
+
+                for (ItemStack item : snapshot) {
+                    addToPages(pages, item);
+                }
+
+                for (int page = 0; page < pages.size(); page++) {
+                    config.set("stash.page_" + page, pages.get(page));
+                }
+
+                try {
+                    config.save(userFile);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    private ItemStack[] loadPageArray(YamlConfiguration config, int page) {
+        ItemStack[] arr = new ItemStack[PAGE_SIZE];
+        List<?> list = config.getList("stash.page_" + page);
+        if (list == null) return arr;
+        for (int i = 0; i < Math.min(PAGE_SIZE, list.size()); i++) {
+            Object obj = list.get(i);
+            if (obj instanceof ItemStack) {
+                arr[i] = (ItemStack) obj;
+            }
+        }
+        return arr;
+    }
+
+    private void addToPages(List<ItemStack[]> pages, ItemStack item) {
+        if (item == null || item.getType().isAir()) return;
+
+        int amount = item.getAmount();
+
+        // merge first
+        for (ItemStack[] page : pages) {
+            for (int i = 0; i < PAGE_SIZE && amount > 0; i++) {
+                ItemStack slot = page[i];
+                if (slot != null && slot.isSimilar(item)) {
+                    int space = slot.getMaxStackSize() - slot.getAmount();
+                    if (space <= 0) continue;
+                    int toAdd = Math.min(space, amount);
+                    slot.setAmount(slot.getAmount() + toAdd);
+                    amount -= toAdd;
+                }
+            }
+            if (amount <= 0) return;
+        }
+
+        // empty slots
+        while (amount > 0) {
+            boolean placed = false;
+            for (ItemStack[] page : pages) {
+                for (int i = 0; i < PAGE_SIZE; i++) {
+                    if (page[i] == null || page[i].getType().isAir()) {
+                        ItemStack toPut = item.clone();
+                        int stack = Math.min(toPut.getMaxStackSize(), amount);
+                        toPut.setAmount(stack);
+                        page[i] = toPut;
+                        amount -= stack;
+                        placed = true;
+                        break;
+                    }
+                }
+                if (placed) break;
+            }
+            if (!placed) {
+                pages.add(new ItemStack[PAGE_SIZE]);
+            }
+        }
+    }
+
     public ItemStack[] loadStash(Player player, int page) {
         File userFile = new File(userDataFolder, player.getUniqueId() + ".yml");
         if (!userFile.exists()) {
-            return new ItemStack[45]; // 45 slots for items, 9 for nav
+            return new ItemStack[PAGE_SIZE];
         }
-        
-        YamlConfiguration config = YamlConfiguration.loadConfiguration(userFile);
+
+        synchronized (lockFor(player.getUniqueId())) {
+            YamlConfiguration config = YamlConfiguration.loadConfiguration(userFile);
         
         // Migration check: if "stash" exists as a list but "stash.page_0" doesn't
         if (page == 0 && config.contains("stash") && !config.isConfigurationSection("stash")) {
@@ -199,11 +330,15 @@ public class StashManager {
         }
 
         List<ItemStack> list = (List<ItemStack>) config.getList("stash.page_" + page);
-        
+        ItemStack[] result = new ItemStack[PAGE_SIZE];
         if (list == null) {
-            return new ItemStack[45];
+            return result;
         }
-        
-        return list.toArray(new ItemStack[0]);
+        for (int i = 0; i < Math.min(PAGE_SIZE, list.size()); i++) {
+            ItemStack it = list.get(i);
+            result[i] = it;
+        }
+        return result;
+        }
     }
 }

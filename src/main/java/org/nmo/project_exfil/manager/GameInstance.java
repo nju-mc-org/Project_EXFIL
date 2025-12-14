@@ -66,7 +66,7 @@ public class GameInstance {
         modules.forEach(m -> m.onPlayerQuit(this, player));
         
         // If no players left and game has started (or even if waiting), unload it to save resources
-        if (players.isEmpty()) {
+        if (players.isEmpty() && state != GameState.ENDING) {
             // Schedule unload with a small delay to allow for immediate reconnects if needed, 
             // but user requested deletion if "eventually no players".
             // Delay is crucial to ensure player has fully left the world context before unloading
@@ -91,10 +91,10 @@ public class GameInstance {
         modules.forEach(m -> m.onEnd(this));
 
         // Kick all players to lobby
-        for (UUID uuid : players) {
+        for (UUID uuid : new HashSet<>(players)) {
             Player p = Bukkit.getPlayer(uuid);
             if (p != null) {
-                ProjectEXFILPlugin.getPlugin().getGameManager().teleportToLobby(p);
+                ProjectEXFILPlugin.getPlugin().getGameManager().failToLobby(p);
                 ProjectEXFILPlugin.getPlugin().getLanguageManager().send(p, "exfil.game.ended");
             }
         }

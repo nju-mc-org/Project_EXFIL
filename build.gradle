@@ -49,6 +49,12 @@ repositories {
         url = "https://repo.alessiodp.com/releases/"
     }
 
+    // ItemsAdder API
+    maven {
+        name = "matteodev"
+        url = "https://maven.devs.beer/"
+    }
+
 }
 
 dependencies {
@@ -110,6 +116,9 @@ dependencies {
     // Sentinel
     compileOnly 'org.mcmonkey:sentinel:2.9.2-SNAPSHOT'
 
+    // ItemsAdder API (provided by ItemsAdder plugin at runtime)
+    // Use dynamic version to avoid hardcoding; pin this if you need reproducible builds.
+    compileOnly 'dev.lone:api-itemsadder:+' 
 
 }
 

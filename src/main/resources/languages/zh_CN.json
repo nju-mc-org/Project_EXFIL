@@ -131,6 +131,7 @@
   "exfil.extract.title": "<green>撤离成功",
   "exfil.extract.extracting": "<green>正在撤离...",
   "exfil.extract.seconds": "<gray><time> 秒",
+  "exfil.raid.failed": "<red>行动失败，装备遗失.",
   "exfil.scoreboard.title": "<gold><bold>突围行动",
   "exfil.scoreboard.balance": "余额: ",
   "exfil.scoreboard.map": "地图: ",

@@ -30,36 +30,54 @@ public class NametagManager {
     }
 
     public void updateAll() {
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            updateNametags(player);
+        if (!partyManager.isEnabled()) return;
+
+        java.util.List<Player> online = new java.util.ArrayList<>(Bukkit.getOnlinePlayers());
+        java.util.Map<java.util.UUID, java.util.UUID> partyIds = new java.util.HashMap<>();
+        for (Player p : online) {
+            PartyPlayer pp = partyManager.getPartyPlayer(p.getUniqueId());
+            partyIds.put(p.getUniqueId(), (pp != null && pp.isInParty()) ? pp.getPartyId() : null);
+        }
+
+        for (Player viewer : online) {
+            if (plugin.getGameManager().getPlayerInstance(viewer) == null) continue; // only update raid players
+            updateNametags(viewer, online, partyIds);
         }
     }
 
     public void updateNametags(Player viewer) {
+        updateNametags(viewer, new java.util.ArrayList<>(Bukkit.getOnlinePlayers()), null);
+    }
+
+    private void updateNametags(Player viewer, java.util.List<Player> online, java.util.Map<java.util.UUID, java.util.UUID> partyIds) {
         if (!partyManager.isEnabled()) return;
 
-        List<String> allies = new ArrayList<>();
-        List<String> enemies = new ArrayList<>();
+        java.util.UUID viewerPartyId = null;
+        if (partyIds != null) {
+            viewerPartyId = partyIds.get(viewer.getUniqueId());
+        } else {
+            PartyPlayer viewerPartyPlayer = partyManager.getPartyPlayer(viewer.getUniqueId());
+            viewerPartyId = (viewerPartyPlayer != null && viewerPartyPlayer.isInParty()) ? viewerPartyPlayer.getPartyId() : null;
+        }
 
-        PartyPlayer viewerPartyPlayer = partyManager.getPartyPlayer(viewer.getUniqueId());
-        UUID viewerPartyId = (viewerPartyPlayer != null && viewerPartyPlayer.isInParty()) ? viewerPartyPlayer.getPartyId() : null;
+        java.util.Set<String> allies = new java.util.HashSet<>();
+        java.util.Set<String> enemies = new java.util.HashSet<>();
 
-        for (Player target : Bukkit.getOnlinePlayers()) {
+        for (Player target : online) {
             if (target.equals(viewer)) continue;
 
             boolean isAlly = false;
             if (viewerPartyId != null) {
-                PartyPlayer targetPartyPlayer = partyManager.getPartyPlayer(target.getUniqueId());
-                if (targetPartyPlayer != null && targetPartyPlayer.isInParty() && targetPartyPlayer.getPartyId().equals(viewerPartyId)) {
-                    isAlly = true;
+                java.util.UUID targetPartyId = (partyIds != null) ? partyIds.get(target.getUniqueId()) : null;
+                if (targetPartyId == null && partyIds == null) {
+                    PartyPlayer targetPartyPlayer = partyManager.getPartyPlayer(target.getUniqueId());
+                    targetPartyId = (targetPartyPlayer != null && targetPartyPlayer.isInParty()) ? targetPartyPlayer.getPartyId() : null;
                 }
+                isAlly = viewerPartyId.equals(targetPartyId);
             }
 
-            if (isAlly) {
-                allies.add(target.getName());
-            } else {
-                enemies.add(target.getName());
-            }
+            if (isAlly) allies.add(target.getName());
+            else enemies.add(target.getName());
         }
 
         // Use Bukkit Scoreboard API instead of ProtocolLib to avoid packet errors
@@ -67,7 +85,7 @@ public class NametagManager {
         updateTeam(viewer, TEAM_ENEMY, NamedTextColor.WHITE, Team.OptionStatus.NEVER, enemies);
     }
 
-    private void updateTeam(Player viewer, String teamName, NamedTextColor color, Team.OptionStatus visibility, List<String> players) {
+    private void updateTeam(Player viewer, String teamName, NamedTextColor color, Team.OptionStatus visibility, java.util.Set<String> players) {
         Scoreboard board = viewer.getScoreboard();
         
         // Ensure player has a private scoreboard (ScoreboardManager also does this, but safety first)
@@ -95,13 +113,11 @@ public class NametagManager {
         }
 
         // Update players
-        // Remove players not in the list
         for (String entry : new ArrayList<>(team.getEntries())) {
             if (!players.contains(entry)) {
                 team.removeEntry(entry);
             }
         }
-        // Add players in the list
         for (String player : players) {
             if (!team.hasEntry(player)) {
                 team.addEntry(player);

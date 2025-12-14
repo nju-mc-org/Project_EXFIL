@@ -76,9 +76,12 @@ public class BossBarModule implements GameModule {
                 double cx = r.getBox().getCenterX();
                 double cy = r.getBox().getCenterY();
                 double cz = r.getBox().getCenterZ();
-                
-                double dstSq = Math.pow(pLoc.getX() - cx, 2) + Math.pow(pLoc.getZ() - cz, 2) + Math.pow(pLoc.getY() - cy, 2);
-                
+
+                double dx = pLoc.getX() - cx;
+                double dy = pLoc.getY() - cy;
+                double dz = pLoc.getZ() - cz;
+                double dstSq = dx * dx + dy * dy + dz * dz;
+
                 if (dstSq < minDstSq) {
                     minDstSq = dstSq;
                     nearest = r;

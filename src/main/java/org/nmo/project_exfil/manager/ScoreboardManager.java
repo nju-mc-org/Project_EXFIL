@@ -20,6 +20,22 @@ public class ScoreboardManager {
 
     private final ProjectEXFILPlugin plugin;
     private final Map<UUID, Long> combatStartTimes = new HashMap<>();
+    private final Map<UUID, CachedStatic> staticCache = new HashMap<>();
+    private static final long STATIC_CACHE_MS = 5000L;
+
+    private static class CachedStatic {
+        final long ts;
+        final String balanceStr;
+        final String mapStr;
+        final String rankStr;
+
+        CachedStatic(long ts, String balanceStr, String mapStr, String rankStr) {
+            this.ts = ts;
+            this.balanceStr = balanceStr;
+            this.mapStr = mapStr;
+            this.rankStr = rankStr;
+        }
+    }
 
     public ScoreboardManager(ProjectEXFILPlugin plugin) {
         this.plugin = plugin;
@@ -63,22 +79,30 @@ public class ScoreboardManager {
             objective.setDisplaySlot(DisplaySlot.SIDEBAR);
         }
 
-        // Balance
-        String balanceStr;
-        if (DependencyHelper.isXConomyEnabled()) {
-              balanceStr = "$" + String.format("%.2f", DependencyHelper.getBalance(player));
-        } else {
-              balanceStr = DependencyHelper.parsePlaceholders(player, "%vaultunlocked_balanceformatted%");
+        long now = System.currentTimeMillis();
+        CachedStatic cached = staticCache.get(player.getUniqueId());
+        if (cached == null || (now - cached.ts) > STATIC_CACHE_MS) {
+            String balanceStr;
+            if (DependencyHelper.isXConomyEnabled()) {
+                balanceStr = "$" + String.format("%.2f", DependencyHelper.getBalance(player));
+            } else {
+                balanceStr = DependencyHelper.parsePlaceholders(player, "%vaultunlocked_balanceformatted%");
+            }
+
+            String mapStr = DependencyHelper.getWorldAlias(player.getWorld());
+            String rank = DependencyHelper.getPlayerGroup(player);
+            cached = new CachedStatic(now, balanceStr, mapStr, rank);
+            staticCache.put(player.getUniqueId(), cached);
         }
-        updateTeam(board, objective, "balance", plugin.getLanguageManager().getMessage("exfil.scoreboard.balance"), Component.text(balanceStr, NamedTextColor.GREEN), 4);
+
+        // Balance
+        updateTeam(board, objective, "balance", plugin.getLanguageManager().getMessage("exfil.scoreboard.balance"), Component.text(cached.balanceStr, NamedTextColor.GREEN), 4);
 
         // Map
-        String mapStr = DependencyHelper.getWorldAlias(player.getWorld());
-        updateTeam(board, objective, "map", plugin.getLanguageManager().getMessage("exfil.scoreboard.map"), Component.text(mapStr, NamedTextColor.YELLOW), 3);
+        updateTeam(board, objective, "map", plugin.getLanguageManager().getMessage("exfil.scoreboard.map"), Component.text(cached.mapStr, NamedTextColor.YELLOW), 3);
 
         // Rank
-        String rank = DependencyHelper.getPlayerGroup(player);
-        updateTeam(board, objective, "rank", plugin.getLanguageManager().getMessage("exfil.scoreboard.rank"), Component.text(rank, NamedTextColor.AQUA), 5);
+        updateTeam(board, objective, "rank", plugin.getLanguageManager().getMessage("exfil.scoreboard.rank"), Component.text(cached.rankStr, NamedTextColor.AQUA), 5);
 
         // Combat Time
         String timeStr;

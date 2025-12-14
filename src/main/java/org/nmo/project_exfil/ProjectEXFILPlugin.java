@@ -109,6 +109,11 @@ public final class ProjectEXFILPlugin extends JavaPlugin {
         // Start Tasks
         new ExtractionTask(gameManager, regionManager).runTaskTimer(this, 20L, 20L);
         
+        // ItemsAdder (async loading)
+        if (DependencyHelper.isItemsAdderEnabled()) {
+            org.nmo.project_exfil.integration.itemsadder.ItemsAdderIntegration.init(this);
+        }
+
         // Register Placeholders
         if (DependencyHelper.isPlaceholderAPIEnabled()) {
             new ExfilExpansion(this).register();
@@ -141,6 +146,10 @@ public final class ProjectEXFILPlugin extends JavaPlugin {
 
     public LootManager getLootManager() {
         return lootManager;
+    }
+
+    public StashManager getStashManager() {
+        return stashManager;
     }
 
     public ReviveManager getReviveManager() {

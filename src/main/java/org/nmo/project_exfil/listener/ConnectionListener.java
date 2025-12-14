@@ -15,7 +15,7 @@ public class ConnectionListener implements Listener {
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        // Clean up player from any active games and scoreboard
-        gameManager.removePlayerFromGame(event.getPlayer());
+        // If player disconnects during raid, treat as failed raid to avoid logout saving
+        gameManager.handleDisconnect(event.getPlayer());
     }
 }

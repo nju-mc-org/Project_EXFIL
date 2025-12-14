@@ -6,7 +6,7 @@ authors: [ NJU Minecraft Organization, Kingcq ]
 description: Tarkov-like game in Minecraft, a simple paper plugin
 website: nmo.net.cn
 depend: [FastAsyncWorldEdit, ProtocolLib, QualityArmory, Citizens, Sentinel]
-softdepend: [PlaceholderAPI, DecentHolograms, TAB, Vault, LuckPerms, XConomy, Parties]
+softdepend: [PlaceholderAPI, DecentHolograms, TAB, Vault, LuckPerms, XConomy, Parties, ItemsAdder]
 commands:
   exfil:
     description: Main command for Project EXFIL

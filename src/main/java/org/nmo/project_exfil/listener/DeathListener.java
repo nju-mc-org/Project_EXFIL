@@ -27,9 +27,11 @@ public class DeathListener implements Listener {
         Player player = event.getEntity();
         World world = player.getWorld();
 
-        if (!world.getName().equalsIgnoreCase("world")) {
+        if (gameManager.getPlayerInstance(player) != null) {
             // It's a raid world
             event.deathMessage(null);
+            event.setKeepInventory(false);
+            event.setKeepLevel(false);
             
             plugin.getLanguageManager().send(player, "exfil.death_raid");
             plugin.getLanguageManager().send(player, "exfil.death_lost");

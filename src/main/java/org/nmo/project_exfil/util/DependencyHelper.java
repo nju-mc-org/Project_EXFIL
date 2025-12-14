@@ -13,24 +13,34 @@ import java.util.List;
 
 public class DependencyHelper {
 
+    private static final java.util.Map<String, Boolean> enabledCache = new java.util.concurrent.ConcurrentHashMap<>();
+
+    private static boolean isPluginEnabledCached(String pluginName) {
+        return enabledCache.computeIfAbsent(pluginName, n -> Bukkit.getPluginManager().isPluginEnabled(n));
+    }
+
     public static boolean isPlaceholderAPIEnabled() {
-        return Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI");
+        return isPluginEnabledCached("PlaceholderAPI");
     }
 
     public static boolean isDecentHologramsEnabled() {
-        return Bukkit.getPluginManager().isPluginEnabled("DecentHolograms");
+        return isPluginEnabledCached("DecentHolograms");
     }
 
     public static boolean isTABEnabled() {
-        return Bukkit.getPluginManager().isPluginEnabled("TAB");
+        return isPluginEnabledCached("TAB");
     }
 
     public static boolean isLuckPermsEnabled() {
-        return Bukkit.getPluginManager().isPluginEnabled("LuckPerms");
+        return isPluginEnabledCached("LuckPerms");
     }
 
     public static boolean isXConomyEnabled() {
-        return Bukkit.getPluginManager().isPluginEnabled("XConomy");
+        return isPluginEnabledCached("XConomy");
+    }
+
+    public static boolean isItemsAdderEnabled() {
+        return isPluginEnabledCached("ItemsAdder");
     }
 
 
