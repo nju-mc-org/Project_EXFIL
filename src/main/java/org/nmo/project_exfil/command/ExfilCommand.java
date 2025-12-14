@@ -32,6 +32,7 @@ public class ExfilCommand implements CommandExecutor, TabCompleter {
 
     private void registerSubCommands(StashView stashView) {
         subCommands.put("stash", new StashCommand(plugin, stashView));
+        subCommands.put("secure", new SecureCommand(plugin));
         subCommands.put("set", new SetCommand(plugin));
         subCommands.put("list", new ListCommand(plugin));
         subCommands.put("delete", new DeleteCommand(plugin));

@@ -11,6 +11,7 @@ import org.nmo.project_exfil.manager.RegionManager;
 import org.nmo.project_exfil.manager.StashManager;
 import org.nmo.project_exfil.manager.LanguageManager;
 import org.nmo.project_exfil.manager.MapManager;
+import org.nmo.project_exfil.manager.SecureContainerManager;
 import org.nmo.project_exfil.task.ExtractionTask;
 import org.nmo.project_exfil.ui.MapSelectionView;
 import org.nmo.project_exfil.ui.MainMenuView;
@@ -27,6 +28,8 @@ import org.nmo.project_exfil.listener.DeathListener;
 import org.nmo.project_exfil.listener.LobbyListener;
 import org.nmo.project_exfil.listener.LootListener;
 import org.nmo.project_exfil.listener.ReviveListener;
+import org.nmo.project_exfil.listener.SecureContainerListener;
+import org.nmo.project_exfil.listener.StimListener;
 
 public final class ProjectEXFILPlugin extends JavaPlugin {
     private static ProjectEXFILPlugin plugin = null;
@@ -42,6 +45,7 @@ public final class ProjectEXFILPlugin extends JavaPlugin {
     private LanguageManager languageManager;
     private ReviveManager reviveManager;
     private NametagManager nametagManager;
+    private SecureContainerManager secureContainerManager;
     private MapSelectionView mapSelectionView;
     private MainMenuView mainMenuView;
     private TeamMenuView teamMenuView;
@@ -84,6 +88,7 @@ public final class ProjectEXFILPlugin extends JavaPlugin {
         this.languageManager = new LanguageManager(this);
         this.reviveManager = new ReviveManager(this);
         this.nametagManager = new NametagManager(this);
+        this.secureContainerManager = new SecureContainerManager(this);
         
         // Initialize UI
         this.mapSelectionView = new MapSelectionView(gameManager);
@@ -103,9 +108,9 @@ public final class ProjectEXFILPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new LobbyListener(), this);
         getServer().getPluginManager().registerEvents(new ReviveListener(this, reviveManager, gameManager), this);
         getServer().getPluginManager().registerEvents(new LootListener(this), this);
-        
+        getServer().getPluginManager().registerEvents(new SecureContainerListener(this, secureContainerManager), this);
+        getServer().getPluginManager().registerEvents(new StimListener(this), this);
 
-        
         // Start Tasks
         new ExtractionTask(gameManager, regionManager).runTaskTimer(this, 20L, 20L);
         
@@ -162,6 +167,10 @@ public final class ProjectEXFILPlugin extends JavaPlugin {
 
     public MainMenuView getMainMenuView() {
         return mainMenuView;
+    }
+
+    public SecureContainerManager getSecureContainerManager() {
+        return secureContainerManager;
     }
 
     /**
