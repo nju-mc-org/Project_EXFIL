@@ -15,7 +15,7 @@ public class Footstep implements Listener {
     private long footstepIntervalSprint = 4L;
     private long footstepIntervalWalk = 8L;
 
-    public void Footstep() {
+    public void init() {
         ProjectEXFILPlugin plugin = ProjectEXFILPlugin.getPlugin();
         if (plugin == null) { return; }
         Bukkit.getPluginManager().registerEvents(this, plugin);

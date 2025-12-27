@@ -31,11 +31,9 @@ public class SecureContainerListener implements Listener {
         "ci:3x5", 15
     );
 
-    private final ProjectEXFILPlugin plugin;
     private final SecureContainerManager secure;
 
     public SecureContainerListener(ProjectEXFILPlugin plugin, SecureContainerManager secure) {
-        this.plugin = plugin;
         this.secure = secure;
     }
 

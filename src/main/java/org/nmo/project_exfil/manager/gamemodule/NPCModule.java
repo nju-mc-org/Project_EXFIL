@@ -1,10 +1,10 @@
 package org.nmo.project_exfil.manager.gamemodule;
 
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.nmo.project_exfil.ProjectEXFILPlugin;
 import org.nmo.project_exfil.manager.GameInstance;
+import org.nmo.project_exfil.manager.NPCType;
 import org.nmo.project_exfil.region.NPCRegion;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
@@ -26,7 +26,9 @@ public class NPCModule implements GameModule {
             for (int i = 0; i < region.getCount(); i++) {
                 Location loc = findRandomLocationInBox(game, region.getBox());
                 if (loc != null) {
-                    spawnSoldier(loc);
+                    // 随机选择NPC类型，增加多样性
+                    NPCType type = NPCType.randomWeighted();
+                    spawnNPC(loc, type);
                 }
             }
         }
@@ -53,43 +55,81 @@ public class NPCModule implements GameModule {
         return null;
     }
 
-    private void spawnSoldier(Location loc) {
-        NPC npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, "Scavenger");
+    /**
+     * 生成NPC
+     * @param loc 生成位置
+     * @param type NPC类型
+     */
+    private void spawnNPC(Location loc, NPCType type) {
+        NPC npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, type.displayName);
         npc.spawn(loc);
         npcs.add(npc);
 
+        // 配置Sentinel AI
         SentinelTrait sentinel = npc.getOrAddTrait(SentinelTrait.class);
+        
+        // 基础配置
         sentinel.addTarget("PLAYERS");
-        // sentinel.addAvoid("PLAYERS"); // Causing crash due to Citizens/Sentinel version mismatch
-        // sentinel.avoidRange = 10.0;
-        
-        sentinel.range = 35.0;
-        sentinel.chaseRange = 35.0;
         sentinel.realistic = true;
-        sentinel.setHealth(20);
+        sentinel.setHealth(type.health);
+        sentinel.respawnTime = -1; // 不重生
         
-        sentinel.respawnTime = -1;
-        sentinel.rangedChase = true; // Enable movement
-        sentinel.closeChase = false; // Disable melee chase to prevent rushing
-        sentinel.chaseRange = 10.0; // Limit movement radius
-        sentinel.accuracy = 10.0;
+        // 范围和检测
+        sentinel.range = type.range;
+        sentinel.chaseRange = type.chaseRange;
         
-        try {
-            org.bukkit.inventory.ItemStack weapon = QualityArmory.getCustomItemAsItemStack("ak47");
-            if (weapon == null) {
-                weapon = QualityArmory.getCustomItemAsItemStack("m4a1s");
-            }
-            
-            if (weapon != null) {
-                Equipment equip = npc.getOrAddTrait(Equipment.class);
-                equip.set(Equipment.EquipmentSlot.HAND, weapon);
-            } else {
-                Equipment equip = npc.getOrAddTrait(Equipment.class);
-                equip.set(Equipment.EquipmentSlot.HAND, new org.bukkit.inventory.ItemStack(Material.IRON_SWORD));
-            }
-        } catch (NoClassDefFoundError | Exception e) {
-            Equipment equip = npc.getOrAddTrait(Equipment.class);
-            equip.set(Equipment.EquipmentSlot.HAND, new org.bukkit.inventory.ItemStack(Material.IRON_SWORD));
+        // 战斗行为
+        sentinel.rangedChase = type.canChase;
+        sentinel.closeChase = false; // 禁用近战追击，避免NPC冲脸
+        sentinel.accuracy = type == NPCType.SNIPER ? 5.0 : 10.0; // 狙击手更准确
+        
+        // 根据类型设置特殊行为
+        if (type == NPCType.GUARD) {
+            // 守卫类型：更倾向于站岗，减少移动
+            sentinel.rangedChase = false;
+            sentinel.chaseRange = type.guardRange;
+        } else if (type.canPatrol) {
+            // 巡逻类型：允许追击但限制范围
+            sentinel.rangedChase = type.canChase;
+            sentinel.chaseRange = type.chaseRange;
         }
+        
+        // 性能优化：通过限制范围减少计算
+        // Sentinel会自动优化，我们通过合理的范围设置来减少性能开销
+        
+        // 装备武器
+        equipWeapon(npc, type);
+    }
+    
+    /**
+     * 装备武器
+     */
+    private void equipWeapon(NPC npc, NPCType type) {
+        Equipment equip = npc.getOrAddTrait(Equipment.class);
+        org.bukkit.inventory.ItemStack weapon = null;
+        
+        // 尝试从QualityArmory获取武器
+        if (ProjectEXFILPlugin.getPlugin() != null) {
+            try {
+                for (String weaponId : type.weaponIds) {
+                    weapon = QualityArmory.getCustomItemAsItemStack(weaponId);
+                    if (weapon != null) break;
+                }
+            } catch (Exception e) {
+                // QualityArmory不可用
+            }
+        }
+        
+        // 如果获取失败，使用备用武器
+        if (weapon == null) {
+            weapon = new org.bukkit.inventory.ItemStack(type.fallbackWeapon);
+        }
+        
+        equip.set(Equipment.EquipmentSlot.HAND, weapon);
+        
+        // 根据类型添加护甲（可选）
+        // 注意：Citizens的Equipment槽位可能因版本而异
+        // 这里只设置主要武器，护甲可以通过其他方式添加
+        // 如果需要护甲，可以考虑使用ItemsAdder的自定义护甲物品
     }
 }

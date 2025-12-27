@@ -13,7 +13,10 @@ public abstract class ChestUIComponent {
      * @param row The required row
      * @param col The required col
      * @return The actual index in inventory
+     * @deprecated This method is not used, kept for potential future use
      */
+    @Deprecated
+    @SuppressWarnings("unused")
     private static Integer toPosition(int row, int col) {
         return row * 9 + col;
     }

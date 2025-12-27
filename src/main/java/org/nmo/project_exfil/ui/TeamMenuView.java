@@ -1,7 +1,5 @@
 package org.nmo.project_exfil.ui;
 
-import com.alessiodp.parties.api.Parties;
-import com.alessiodp.parties.api.interfaces.PartiesAPI;
 import com.alessiodp.parties.api.interfaces.Party;
 import com.alessiodp.parties.api.interfaces.PartyPlayer;
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;

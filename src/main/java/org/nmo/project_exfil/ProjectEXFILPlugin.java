@@ -46,10 +46,17 @@ public final class ProjectEXFILPlugin extends JavaPlugin {
     private ReviveManager reviveManager;
     private NametagManager nametagManager;
     private SecureContainerManager secureContainerManager;
+    private org.nmo.project_exfil.manager.TraderManager traderManager;
+    private org.nmo.project_exfil.manager.TaskManager taskManager;
+    private org.nmo.project_exfil.manager.AchievementManager achievementManager;
+    private org.nmo.project_exfil.data.PlayerDataManager playerDataManager;
+    private org.nmo.project_exfil.manager.LeaderboardManager leaderboardManager;
+    private org.nmo.project_exfil.manager.LootPresetManager lootPresetManager;
     private MapSelectionView mapSelectionView;
     private MainMenuView mainMenuView;
     private TeamMenuView teamMenuView;
     private StashView stashView;
+    private org.nmo.project_exfil.ui.TraderView traderView;
 
     /**
      * Get the plugin instance
@@ -89,11 +96,28 @@ public final class ProjectEXFILPlugin extends JavaPlugin {
         this.reviveManager = new ReviveManager(this);
         this.nametagManager = new NametagManager(this);
         this.secureContainerManager = new SecureContainerManager(this);
+        this.traderManager = new org.nmo.project_exfil.manager.TraderManager(this);
+        this.taskManager = new org.nmo.project_exfil.manager.TaskManager(this);
+        this.achievementManager = new org.nmo.project_exfil.manager.AchievementManager(this);
+        this.playerDataManager = new org.nmo.project_exfil.data.PlayerDataManager(this);
+        this.leaderboardManager = new org.nmo.project_exfil.manager.LeaderboardManager(this);
+        this.lootPresetManager = new org.nmo.project_exfil.manager.LootPresetManager(this);
+        
+        // Initialize NPC Performance Optimizer
+        new org.nmo.project_exfil.manager.NPCPerformanceOptimizer(this);
         
         // Initialize UI
         this.mapSelectionView = new MapSelectionView(gameManager);
         this.stashView = new StashView(stashManager);
+        this.traderView = new org.nmo.project_exfil.ui.TraderView(traderManager);
+        org.nmo.project_exfil.ui.TaskView taskView = new org.nmo.project_exfil.ui.TaskView(taskManager);
+        org.nmo.project_exfil.ui.AchievementView achievementView = new org.nmo.project_exfil.ui.AchievementView(achievementManager);
+        org.nmo.project_exfil.ui.LeaderboardView leaderboardView = new org.nmo.project_exfil.ui.LeaderboardView(leaderboardManager);
         this.mainMenuView = new MainMenuView(mapSelectionView, partyManager, stashView);
+        this.mainMenuView.setTraderView(traderView);
+        this.mainMenuView.setTaskView(taskView);
+        this.mainMenuView.setAchievementView(achievementView);
+        this.mainMenuView.setLeaderboardView(leaderboardView);
         this.teamMenuView = new TeamMenuView(mainMenuView, partyManager);
         this.mainMenuView.setTeamMenuView(teamMenuView);
         
@@ -110,6 +134,13 @@ public final class ProjectEXFILPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new LootListener(this), this);
         getServer().getPluginManager().registerEvents(new SecureContainerListener(this, secureContainerManager), this);
         getServer().getPluginManager().registerEvents(new StimListener(this), this);
+        getServer().getPluginManager().registerEvents(new org.nmo.project_exfil.listener.TaskAchievementListener(this), this);
+        getServer().getPluginManager().registerEvents(new org.nmo.project_exfil.listener.PlayerDataListener(this), this);
+        getServer().getPluginManager().registerEvents(new org.nmo.project_exfil.listener.ArmorProtectionListener(this), this);
+        
+        // Register Footstep system
+        org.nmo.project_exfil.footsteps.Footstep footstep = new org.nmo.project_exfil.footsteps.Footstep();
+        footstep.init(); // Initialize and register
 
         // Start Tasks
         new ExtractionTask(gameManager, regionManager).runTaskTimer(this, 20L, 20L);
@@ -173,11 +204,44 @@ public final class ProjectEXFILPlugin extends JavaPlugin {
         return secureContainerManager;
     }
 
+    public org.nmo.project_exfil.manager.TraderManager getTraderManager() {
+        return traderManager;
+    }
+    
+    public org.nmo.project_exfil.ui.TraderView getTraderView() {
+        return traderView;
+    }
+
+    public org.nmo.project_exfil.manager.TaskManager getTaskManager() {
+        return taskManager;
+    }
+    
+    public org.nmo.project_exfil.manager.AchievementManager getAchievementManager() {
+        return achievementManager;
+    }
+
+    public org.nmo.project_exfil.data.PlayerDataManager getPlayerDataManager() {
+        return playerDataManager;
+    }
+    
+    public org.nmo.project_exfil.manager.LeaderboardManager getLeaderboardManager() {
+        return leaderboardManager;
+    }
+    
+    public org.nmo.project_exfil.manager.LootPresetManager getLootPresetManager() {
+        return lootPresetManager;
+    }
+
     /**
      * Plugin shutdown logic
      */
     @Override
     public void onDisable() {
+        // 保存所有玩家数据
+        if (playerDataManager != null) {
+            playerDataManager.saveAll(false); // 同步保存，确保数据不丢失
+        }
+        
         plugin = null;
     }
 }

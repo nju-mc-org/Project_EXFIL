@@ -8,8 +8,6 @@ import org.nmo.project_exfil.ProjectEXFILPlugin;
 import org.nmo.project_exfil.manager.GameInstance;
 import org.nmo.project_exfil.region.CombatRegion;
 import org.nmo.project_exfil.manager.LanguageManager;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.title.Title;
 
 import java.time.Duration;

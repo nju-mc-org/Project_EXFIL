@@ -17,7 +17,6 @@ import org.nmo.project_exfil.util.DependencyHelper;
 
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;

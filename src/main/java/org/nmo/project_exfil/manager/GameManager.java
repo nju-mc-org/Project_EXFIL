@@ -11,8 +11,6 @@ import org.nmo.project_exfil.integration.slime.SlimeWorldManagerIntegration;
 import org.nmo.project_exfil.region.SpawnRegion;
 import org.nmo.project_exfil.region.ExtractionRegion;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 
 import java.util.ArrayList;
@@ -182,6 +180,32 @@ public class GameManager {
     public void extractToLobby(Player player) {
         depositInventoryToStash(player);
         plugin.getLanguageManager().send(player, "exfil.extract_success");
+        
+        // 更新任务和成就
+        if (plugin.getTaskManager() != null) {
+            plugin.getTaskManager().updateProgress(player, org.nmo.project_exfil.manager.TaskManager.TaskTarget.EXTRACT, 1);
+        }
+        if (plugin.getAchievementManager() != null) {
+            plugin.getAchievementManager().updateProgress(player, org.nmo.project_exfil.manager.AchievementManager.AchievementType.EXTRACT, 1);
+        }
+        
+        // 更新统计数据
+        if (plugin.getPlayerDataManager() != null) {
+            org.nmo.project_exfil.data.PlayerDataManager.PlayerData data = 
+                plugin.getPlayerDataManager().getPlayerData(player);
+            data.extracts++;
+            // 计算本次行动的价值（简化版，可以改进）
+            double value = 0.0;
+            for (org.bukkit.inventory.ItemStack item : player.getInventory().getContents()) {
+                if (item != null && !item.getType().isAir()) {
+                    // 简单的价值计算，可以根据实际需求改进
+                    value += item.getAmount() * 10.0;
+                }
+            }
+            data.totalValue += value;
+            plugin.getPlayerDataManager().savePlayerData(player.getUniqueId(), true);
+        }
+        
         teleportToLobby(player);
     }
 

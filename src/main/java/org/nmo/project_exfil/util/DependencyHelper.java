@@ -106,6 +106,18 @@ public class DependencyHelper {
         }
         return java.math.BigDecimal.ZERO;
     }
+    
+    public static void depositMoney(Player player, double amount) {
+        if (isXConomyEnabled()) {
+            XConomyHook.deposit(player, amount);
+        } else if (isVaultEnabled()) {
+            VaultHook.deposit(player, amount);
+        }
+    }
+    
+    public static boolean isVaultEnabled() {
+        return isPluginEnabledCached("Vault");
+    }
 
     // World Alias Usage
     public static String getWorldAlias(org.bukkit.World world) {
@@ -242,6 +254,29 @@ public class DependencyHelper {
                 e.printStackTrace();
             }
             return java.math.BigDecimal.ZERO;
+        }
+        
+        static void deposit(Player player, double amount) {
+            try {
+                me.yic.xconomy.api.XConomyAPI api = new me.yic.xconomy.api.XConomyAPI();
+                api.changePlayerBalance(player.getUniqueId(), "default", java.math.BigDecimal.valueOf(amount), false);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    
+    private static class VaultHook {
+        @SuppressWarnings("deprecation")
+        static void deposit(Player player, double amount) {
+            try {
+                net.milkbowl.vault.economy.Economy economy = org.bukkit.Bukkit.getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class).getProvider();
+                if (economy != null) {
+                    economy.depositPlayer(player, amount);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 }

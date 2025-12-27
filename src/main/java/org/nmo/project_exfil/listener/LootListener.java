@@ -1,8 +1,6 @@
 package org.nmo.project_exfil.listener;
 
 import com.destroystokyo.paper.profile.PlayerProfile;
-import com.destroystokyo.paper.profile.ProfileProperty;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Skull;
@@ -14,8 +12,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.nmo.project_exfil.ProjectEXFILPlugin;
 import org.nmo.project_exfil.manager.GameInstance;
 import org.nmo.project_exfil.manager.gamemodule.LootModule;
-
-import java.util.UUID;
 
 public class LootListener implements Listener {
 

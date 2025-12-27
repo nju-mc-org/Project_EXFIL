@@ -15,7 +15,6 @@ import org.nmo.project_exfil.manager.GameInstance;
 import org.nmo.project_exfil.region.LootRegion;
 
 import org.bukkit.inventory.Inventory;
-import org.nmo.project_exfil.manager.LootManager;
 
 import java.util.HashMap;
 import java.util.List;
@@ -35,7 +34,10 @@ public class LootModule implements GameModule {
             return lootInventories.get(loc);
         }
         
-        Inventory inv = org.bukkit.Bukkit.createInventory(null, 27, ProjectEXFILPlugin.getPlugin().getLanguageManager().getMessage("exfil.loot.box.title"));
+        Inventory inv = org.bukkit.Bukkit.createInventory(null, 27, 
+            ProjectEXFILPlugin.getPlugin().getLanguageManager().getMessage("exfil.loot.box.title"));
+        
+        // 使用预设生成战利品
         ProjectEXFILPlugin.getPlugin().getLootManager().generateLoot(inv);
         lootInventories.put(loc, inv);
         return inv;

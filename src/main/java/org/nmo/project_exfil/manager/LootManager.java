@@ -5,16 +5,13 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.nmo.project_exfil.ProjectEXFILPlugin;
 import org.nmo.project_exfil.ui.LootEditorView;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 public class LootManager {
@@ -25,6 +22,7 @@ public class LootManager {
     private final List<LootItem> lootTable = new ArrayList<>();
     private final Random random = new Random();
     private LootEditorView lootEditorView;
+    private String currentPreset = "default";
 
     public LootManager(ProjectEXFILPlugin plugin) {
         this.plugin = plugin;
@@ -92,19 +90,66 @@ public class LootManager {
     }
 
     public void generateLoot(Inventory inventory) {
+        generateLoot(inventory, currentPreset);
+    }
+    
+    /**
+     * 使用指定预设生成战利品
+     */
+    public void generateLoot(Inventory inventory, String presetName) {
         inventory.clear();
-        // Simple algorithm: iterate through all items and roll for each
-        // Or pick X items? The user didn't specify.
-        // "put items... set probability". Usually implies each item has a chance to appear.
         
+        // 获取预设
+        org.nmo.project_exfil.manager.LootPresetManager presetManager = 
+            plugin.getLootPresetManager();
+        if (presetManager == null) {
+            // 如果没有预设管理器，使用默认战利品表
+            generateLootFromTable(inventory);
+            return;
+        }
+        
+        org.nmo.project_exfil.manager.LootPresetManager.LootPreset preset = 
+            presetManager.getPreset(presetName);
+        if (preset == null) {
+            preset = presetManager.getDefaultPreset();
+        }
+        
+        if (preset != null) {
+            // 使用预设生成
+            for (LootItem lootItem : preset.items) {
+                if (random.nextDouble() <= lootItem.getChance()) {
+                    inventory.addItem(lootItem.getItem().clone());
+                }
+            }
+        } else {
+            // 后备：使用默认战利品表
+            generateLootFromTable(inventory);
+        }
+    }
+    
+    /**
+     * 从默认战利品表生成
+     */
+    private void generateLootFromTable(Inventory inventory) {
         for (LootItem lootItem : lootTable) {
             if (random.nextDouble() <= lootItem.getChance()) {
-                // Find a random empty slot or add?
-                // If we just add, it might stack or fill up.
-                // Let's try to add it.
                 inventory.addItem(lootItem.getItem().clone());
             }
         }
+    }
+    
+    /**
+     * 设置当前使用的预设
+     */
+    public void setCurrentPreset(String presetName) {
+        this.currentPreset = presetName;
+    }
+    
+    /**
+     * 获取当前预设
+     */
+    public String getCurrentPreset() {
+        return currentPreset;
     }
 
     public static class LootItem {

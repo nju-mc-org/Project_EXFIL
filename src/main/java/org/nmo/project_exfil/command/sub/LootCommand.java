@@ -5,7 +5,6 @@ import org.bukkit.entity.Player;
 import org.nmo.project_exfil.ProjectEXFILPlugin;
 import org.nmo.project_exfil.command.SubCommand;
 
-import java.util.Collections;
 import java.util.List;
 
 public class LootCommand implements SubCommand {
@@ -23,12 +22,32 @@ public class LootCommand implements SubCommand {
             return;
         }
         Player player = (Player) sender;
+        
+        // 如果有参数，处理预设管理
+        if (args.length > 1) {
+            if (args[1].equalsIgnoreCase("preset") || args[1].equalsIgnoreCase("presets")) {
+                // 打开预设管理界面
+                org.nmo.project_exfil.ui.LootPresetView presetView = 
+                    new org.nmo.project_exfil.ui.LootPresetView(plugin.getLootPresetManager());
+                presetView.open(player);
+                return;
+            }
+        }
+        
+        // 默认打开战利品编辑器
         plugin.getLootManager().openEditor(player);
     }
 
     @Override
     public List<String> tabComplete(CommandSender sender, String[] args) {
-        return Collections.emptyList();
+        List<String> completions = new java.util.ArrayList<>();
+        if (args.length == 2) {
+            if ("preset".startsWith(args[1].toLowerCase()) || "presets".startsWith(args[1].toLowerCase())) {
+                completions.add("preset");
+                completions.add("presets");
+            }
+        }
+        return completions;
     }
 
     @Override

@@ -5,19 +5,16 @@ import com.alessiodp.parties.api.interfaces.PartiesAPI;
 import com.alessiodp.parties.api.interfaces.Party;
 import com.alessiodp.parties.api.interfaces.PartyPlayer;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.nmo.project_exfil.ProjectEXFILPlugin;
 
 import java.util.UUID;
 
 public class PartyManager {
 
-    private final ProjectEXFILPlugin plugin;
     private PartiesAPI api;
     private boolean enabled = false;
 
     public PartyManager(ProjectEXFILPlugin plugin) {
-        this.plugin = plugin;
         if (Bukkit.getPluginManager().getPlugin("Parties") != null && Bukkit.getPluginManager().getPlugin("Parties").isEnabled()) {
             this.api = Parties.getApi();
             this.enabled = true;

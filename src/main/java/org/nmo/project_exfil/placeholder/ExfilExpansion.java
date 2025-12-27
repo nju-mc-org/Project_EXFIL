@@ -15,6 +15,7 @@ public class ExfilExpansion extends PlaceholderExpansion {
 
     @Override
     @NotNull
+    @SuppressWarnings("deprecation")
     public String getAuthor() {
         return String.join(", ", plugin.getDescription().getAuthors());
     }
@@ -27,6 +28,7 @@ public class ExfilExpansion extends PlaceholderExpansion {
 
     @Override
     @NotNull
+    @SuppressWarnings("deprecation")
     public String getVersion() {
         return plugin.getDescription().getVersion();
     }
@@ -37,6 +39,7 @@ public class ExfilExpansion extends PlaceholderExpansion {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public String onRequest(OfflinePlayer player, @NotNull String params) {
         if (params.equalsIgnoreCase("version")) {
             return plugin.getDescription().getVersion();

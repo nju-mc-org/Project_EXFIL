@@ -200,6 +200,11 @@ public class BossBarModule implements GameModule {
         return sb.toString();
     }
 
+    /**
+     * @deprecated This method is not used, kept for potential future use
+     */
+    @Deprecated
+    @SuppressWarnings("unused")
     private String getCardinalDirectionKey(double x1, double z1, double x2, double z2) {
         double dx = x2 - x1;
         double dz = z2 - z1;

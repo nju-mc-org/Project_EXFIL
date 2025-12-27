@@ -10,7 +10,6 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.nmo.project_exfil.ProjectEXFILPlugin;
 import org.nmo.project_exfil.manager.GameManager;
 
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 
 public class DeathListener implements Listener {
 
@@ -32,6 +31,14 @@ public class DeathListener implements Listener {
             event.deathMessage(null);
             event.setKeepInventory(false);
             event.setKeepLevel(false);
+            
+            // 更新统计数据
+            if (plugin.getPlayerDataManager() != null) {
+                org.nmo.project_exfil.data.PlayerDataManager.PlayerData data = 
+                    plugin.getPlayerDataManager().getPlayerData(player);
+                data.deaths++;
+                plugin.getPlayerDataManager().savePlayerData(player.getUniqueId(), true);
+            }
             
             plugin.getLanguageManager().send(player, "exfil.death_raid");
             plugin.getLanguageManager().send(player, "exfil.death_lost");

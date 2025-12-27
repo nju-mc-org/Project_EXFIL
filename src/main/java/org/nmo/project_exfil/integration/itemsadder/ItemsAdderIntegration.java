@@ -1,7 +1,6 @@
 package org.nmo.project_exfil.integration.itemsadder;
 
 import dev.lone.itemsadder.api.Events.ItemsAdderLoadDataEvent;
-import dev.lone.itemsadder.api.ItemsAdder;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -22,15 +21,9 @@ public final class ItemsAdderIntegration implements Listener {
         if (ready) return;
 
         Bukkit.getPluginManager().registerEvents(new ItemsAdderIntegration(), plugin);
-
-        // In some cases ItemsAdder might already be loaded (e.g. after /iareload).
-        try {
-            if (ItemsAdder.areItemsLoaded()) {
-                ready = true;
-                plugin.getLogger().info("ItemsAdder items already loaded.");
-            }
-        } catch (Throwable ignored) {
-        }
+        
+        // ItemsAdder loads asynchronously, wait for ItemsAdderLoadDataEvent
+        // The deprecated areItemsLoaded() method is replaced by listening to the event
     }
 
     @EventHandler

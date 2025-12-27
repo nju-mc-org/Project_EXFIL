@@ -9,8 +9,6 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.nmo.project_exfil.ProjectEXFILPlugin;
 import com.alessiodp.parties.api.interfaces.PartyPlayer;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.title.Title;
 
@@ -55,13 +53,22 @@ public class ReviveManager {
 
             DownedData data = entry.getValue();
 
-            // Apply effects
-            if (!player.isSwimming()) {
-                player.setSwimming(true);
-            }
+            // Apply effects - 使用更稳定的方式
             int effDuration = (int) (TASK_INTERVAL_TICKS * 4);
-            player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, effDuration, 4, false, false));
-            player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, effDuration, 0, false, false));
+            // 使用GLIDING状态代替SWIMMING，更稳定
+            if (!player.isGliding()) {
+                try {
+                    player.setGliding(true);
+                } catch (Exception e) {
+                    // If gliding fails, we can't use deprecated setSwimming
+                    // The player will remain in normal state
+                }
+            }
+            // 添加效果 - 使用更合理的等级
+            player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, effDuration, 3, false, false, false));
+            player.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, effDuration, 1, false, false, false));
+            // 移除失明效果，改为使用屏幕效果提示
+            // player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, effDuration, 0, false, false));
 
             // Check for reviver
             Player reviver = findReviver(player);
@@ -124,35 +131,79 @@ public class ReviveManager {
         
         downedPlayers.put(player.getUniqueId(), new DownedData(MAX_DOWNED_TIME));
         
-        player.setHealth(1.0); // 0.5 hearts
-        player.setSwimming(true);
+        // 设置生命值为1.0（0.5颗心）
+        player.setHealth(1.0);
         
+        // 使用GLIDING状态（更稳定）
+        try {
+            player.setGliding(true);
+        } catch (Exception e) {
+            // If gliding fails, we can't use deprecated setSwimming
+            // The player will remain in normal state
+        }
+        
+        // 立即应用效果
+        player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 100, 3, false, false, false));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 100, 1, false, false, false));
+        
+        // 禁用飞行（如果启用）
+        if (player.getAllowFlight()) {
+            player.setFlying(false);
+            player.setAllowFlight(false);
+        }
+        
+        // 显示标题
         Title.Times times = Title.Times.times(Duration.ofMillis(500), Duration.ofMillis(3000), Duration.ofMillis(1000));
         Title title = Title.title(
-            LegacyComponentSerializer.legacySection().deserialize("§cDOWNED!"), 
-            LegacyComponentSerializer.legacySection().deserialize("§7Wait for a teammate to revive you"), 
+            LegacyComponentSerializer.legacySection().deserialize("§c§l濒死状态"), 
+            LegacyComponentSerializer.legacySection().deserialize("§7等待队友救援或使用医疗包"), 
             times
         );
         player.showTitle(title);
         
-        player.sendMessage(LegacyComponentSerializer.legacySection().deserialize("§cYou are downed! Crawl to safety or wait for help."));
+        // 发送消息
+        player.sendMessage(LegacyComponentSerializer.legacySection().deserialize("§c§l你已进入濒死状态！"));
+        player.sendMessage(LegacyComponentSerializer.legacySection().deserialize("§7- 移动速度大幅降低"));
+        player.sendMessage(LegacyComponentSerializer.legacySection().deserialize("§7- 无法攻击"));
+        player.sendMessage(LegacyComponentSerializer.legacySection().deserialize("§7- 等待队友救援或使用医疗包"));
+        
+        // 播放声音效果
+        player.playSound(player.getLocation(), org.bukkit.Sound.ENTITY_PLAYER_HURT, 1.0f, 0.5f);
     }
 
     public void revive(Player player) {
         downedPlayers.remove(player.getUniqueId());
-        player.setSwimming(false);
-        // player.setGliding(false);
-        player.setHealth(6.0); // Restore to 3 hearts
+        
+        // 恢复状态
+        try {
+            player.setGliding(false);
+        } catch (Exception e) {
+            // setSwimming is deprecated, but gliding should work
+            // If gliding fails, the player will naturally stop gliding
+        }
+        
+        // 恢复生命值到3颗心
+        player.setHealth(6.0);
+        
+        // 移除所有效果
         player.removePotionEffect(PotionEffectType.SLOWNESS);
+        player.removePotionEffect(PotionEffectType.WEAKNESS);
         player.removePotionEffect(PotionEffectType.BLINDNESS);
         
+        // 添加短暂的治疗效果
+        player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 100, 0, false, false, false));
+        
+        // 显示标题
         Title.Times times = Title.Times.times(Duration.ofMillis(500), Duration.ofMillis(2000), Duration.ofMillis(1000));
         Title title = Title.title(
-            LegacyComponentSerializer.legacySection().deserialize("§aREVIVED!"), 
-            LegacyComponentSerializer.legacySection().deserialize("§7Get back in the fight!"), 
+            LegacyComponentSerializer.legacySection().deserialize("§a§l已恢复！"), 
+            LegacyComponentSerializer.legacySection().deserialize("§7继续战斗！"), 
             times
         );
         player.showTitle(title);
+        
+        // 播放声音
+        player.playSound(player.getLocation(), org.bukkit.Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1.2f);
     }
 
     public void eliminate(Player player) {

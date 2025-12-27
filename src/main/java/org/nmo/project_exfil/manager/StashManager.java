@@ -9,12 +9,9 @@ import org.nmo.project_exfil.ProjectEXFILPlugin;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.bukkit.NamespacedKey;
 import org.bukkit.persistence.PersistentDataType;
@@ -141,7 +138,9 @@ public class StashManager {
                 if (typeCompare != 0) return typeCompare;
 
                 // Compare Display Name
+                @SuppressWarnings("deprecation")
                 String n1 = i1.hasItemMeta() && i1.getItemMeta().hasDisplayName() ? i1.getItemMeta().getDisplayName() : "";
+                @SuppressWarnings("deprecation")
                 String n2 = i2.hasItemMeta() && i2.getItemMeta().hasDisplayName() ? i2.getItemMeta().getDisplayName() : "";
                 int nameCompare = n1.compareTo(n2);
                 if (nameCompare != 0) return nameCompare;
@@ -313,6 +312,7 @@ public class StashManager {
         
         // Migration check: if "stash" exists as a list but "stash.page_0" doesn't
         if (page == 0 && config.contains("stash") && !config.isConfigurationSection("stash")) {
+             @SuppressWarnings("unchecked")
              List<ItemStack> oldList = (List<ItemStack>) config.getList("stash");
              if (oldList != null) {
                  // Migrate to page 0
@@ -329,6 +329,7 @@ public class StashManager {
              }
         }
 
+        @SuppressWarnings("unchecked")
         List<ItemStack> list = (List<ItemStack>) config.getList("stash.page_" + page);
         ItemStack[] result = new ItemStack[PAGE_SIZE];
         if (list == null) {

@@ -5,12 +5,10 @@ import com.google.gson.reflect.TypeToken;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.kyori.adventure.translation.GlobalTranslator;
 import net.kyori.adventure.translation.TranslationStore;
 import net.kyori.adventure.audience.Audience;
-import org.bukkit.entity.Player;
 import org.nmo.project_exfil.ProjectEXFILPlugin;
 
 import java.io.InputStream;
@@ -24,6 +22,7 @@ public class LanguageManager {
 
     private final ProjectEXFILPlugin plugin;
     private static final Key KEY = Key.key("project_exfil", "main");
+    @SuppressWarnings("rawtypes")
     private TranslationStore registry;
     private final MiniMessage miniMessage;
 
@@ -49,7 +48,9 @@ public class LanguageManager {
             try (InputStreamReader reader = new InputStreamReader(in, StandardCharsets.UTF_8)) {
                 Map<String, String> map = new Gson().fromJson(reader, new TypeToken<Map<String, String>>(){}.getType());
                 for (Map.Entry<String, String> entry : map.entrySet()) {
-                    this.registry.register(entry.getKey(), locale, new MessageFormat(entry.getValue(), locale));
+                    @SuppressWarnings("unchecked")
+                    TranslationStore<MessageFormat> typedRegistry = (TranslationStore<MessageFormat>) this.registry;
+                    typedRegistry.register(entry.getKey(), locale, new MessageFormat(entry.getValue(), locale));
                 }
             }
         } catch (Exception e) {
