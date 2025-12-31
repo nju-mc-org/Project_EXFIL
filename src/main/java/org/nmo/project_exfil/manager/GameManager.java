@@ -80,6 +80,11 @@ public class GameManager {
             player.teleport(spawnLoc);
             plugin.getLanguageManager().send(player, "exfil.deploy");
             plugin.getScoreboardManager().startCombat(player);
+            
+            // 自动显示俯瞰地图
+            if (plugin.getMapOverviewManager() != null) {
+                plugin.getMapOverviewManager().showMapOverview(player);
+            }
         }
     }
 
@@ -175,6 +180,11 @@ public class GameManager {
             current.removePlayer(player);
         }
         plugin.getScoreboardManager().endCombat(player);
+        
+        // 隐藏俯瞰地图
+        if (plugin.getMapOverviewManager() != null) {
+            plugin.getMapOverviewManager().hideMapOverview(player);
+        }
     }
 
     public void extractToLobby(Player player) {

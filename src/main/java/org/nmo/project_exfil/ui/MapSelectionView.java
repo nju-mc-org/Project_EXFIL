@@ -9,6 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.nmo.project_exfil.manager.GameManager;
 import org.nmo.project_exfil.manager.MapManager;
+import org.nmo.project_exfil.ui.framework.UIHelper;
 
 import java.util.List;
 
@@ -47,6 +48,7 @@ public class MapSelectionView {
             item.setItemMeta(meta);
 
             pane.addItem(new GuiItem(item, event -> {
+                UIHelper.playClickSound(player);
                 plugin.getLanguageManager().send(player, "exfil.map.matchmaking", Placeholder.unparsed("map", map.getDisplayName()));
                 gui.getInventory().close();
                 gameManager.joinQueue(player, map.getTemplateName());
@@ -61,17 +63,7 @@ public class MapSelectionView {
         }
 
         // Back Button
-        ItemStack back = new ItemStack(Material.ARROW);
-        ItemMeta backMeta = back.getItemMeta();
-        backMeta.displayName(plugin.getLanguageManager().getMessage("exfil.team.back"));
-        back.setItemMeta(backMeta);
-        pane.addItem(new GuiItem(back, event -> {
-            if (plugin.getMainMenuView() != null) {
-                plugin.getMainMenuView().open(player);
-            } else {
-                player.closeInventory();
-            }
-        }), 0, 2);
+        pane.addItem(UIHelper.createBackButton(), 0, 2);
 
         gui.addPane(pane);
         gui.show(player);

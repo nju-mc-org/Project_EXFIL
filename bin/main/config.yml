@@ -1,0 +1,24 @@
+# Update interval for chest UI
+chest-ui-update-interval: 5
+# Footstep update interval
+footstep-interval: 4
+# Sprint footstep make noise interval
+footstep-interval-sprint: 4
+# Walk footstep make noise interval
+footstep-interval-walk: 8
+
+# Armor protection settings
+armor-protection:
+  # Enable armor bullet protection
+  enabled: true
+  # Armor durability damage multiplier when hit by bullets
+  durability-damage-multiplier: 2.0
+  # Armor damage reduction percentages by type
+  # leather: 8%, gold: 12%, chainmail: 15%, iron: 20%, diamond: 24%, netherite: 30%
+  reduction:
+    leather: 0.08
+    gold: 0.12
+    chainmail: 0.15
+    iron: 0.20
+    diamond: 0.24
+    netherite: 0.30

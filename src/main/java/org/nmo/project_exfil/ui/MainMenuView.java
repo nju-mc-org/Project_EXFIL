@@ -12,6 +12,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.List;
 
 import org.nmo.project_exfil.manager.PartyManager;
+import org.nmo.project_exfil.ui.framework.UIHelper;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -71,6 +72,7 @@ public class MainMenuView {
         deployItem.setItemMeta(deployMeta);
 
         pane.addItem(new GuiItem(deployItem, event -> {
+            UIHelper.playClickSound(player);
             mapSelectionView.open(player);
         }), 1, 1);
 
@@ -99,6 +101,7 @@ public class MainMenuView {
         teamItem.setItemMeta(teamMeta);
 
         pane.addItem(new GuiItem(teamItem, event -> {
+            UIHelper.playClickSound(player);
             gui.getInventory().close();
             if (teamMenuView != null) {
                 teamMenuView.open(player);
@@ -115,6 +118,7 @@ public class MainMenuView {
         stashItem.setItemMeta(stashMeta);
 
         pane.addItem(new GuiItem(stashItem, event -> {
+            UIHelper.playClickSound(player);
             gui.getInventory().close();
             stashView.open(player);
         }), 7, 1);
@@ -131,6 +135,7 @@ public class MainMenuView {
             traderItem.setItemMeta(traderMeta);
 
             pane.addItem(new GuiItem(traderItem, event -> {
+                UIHelper.playClickSound(player);
                 gui.getInventory().close();
                 traderView.open(player);
             }), 1, 2);
@@ -147,6 +152,7 @@ public class MainMenuView {
             taskItem.setItemMeta(taskMeta);
 
             pane.addItem(new GuiItem(taskItem, event -> {
+                UIHelper.playClickSound(player);
                 gui.getInventory().close();
                 taskView.open(player);
             }), 4, 2);
@@ -163,12 +169,13 @@ public class MainMenuView {
             achievementItem.setItemMeta(achievementMeta);
 
             pane.addItem(new GuiItem(achievementItem, event -> {
+                UIHelper.playClickSound(player);
                 gui.getInventory().close();
                 achievementView.open(player);
             }), 7, 2);
         }
         
-        // 第三行 - 排行榜按钮
+        // 第三行 - 排行榜和改枪按钮
         if (leaderboardView != null) {
             ItemStack leaderboardItem = new ItemStack(Material.BEACON);
             ItemMeta leaderboardMeta = leaderboardItem.getItemMeta();
@@ -180,9 +187,32 @@ public class MainMenuView {
             leaderboardItem.setItemMeta(leaderboardMeta);
 
             pane.addItem(new GuiItem(leaderboardItem, event -> {
+                UIHelper.playClickSound(player);
                 gui.getInventory().close();
                 leaderboardView.open(player);
             }), 4, 3);
+        }
+        
+        // 改枪按钮（需要持有武器）
+        if (plugin.getWeaponModificationManager() != null && 
+            plugin.getWeaponModificationManager().isHoldingGun(player)) {
+            ItemStack modItem = new ItemStack(Material.ANVIL);
+            ItemMeta modMeta = modItem.getItemMeta();
+            modMeta.displayName(Component.text("武器改装", NamedTextColor.LIGHT_PURPLE));
+            modMeta.lore(List.of(
+                Component.text("改装你的武器", NamedTextColor.GRAY),
+                Component.text("安装配件提升性能", NamedTextColor.GRAY),
+                Component.text("点击打开改装界面", NamedTextColor.YELLOW)
+            ));
+            modItem.setItemMeta(modMeta);
+            
+            pane.addItem(new GuiItem(modItem, event -> {
+                UIHelper.playClickSound(player);
+                gui.getInventory().close();
+                org.nmo.project_exfil.ui.WeaponModificationView modView = 
+                    new org.nmo.project_exfil.ui.WeaponModificationView(plugin, plugin.getWeaponModificationManager());
+                modView.open(player);
+            }), 7, 3);
         }
 
         gui.addPane(pane);

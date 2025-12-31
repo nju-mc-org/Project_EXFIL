@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.nmo.project_exfil.manager.AchievementManager;
+import org.nmo.project_exfil.ui.framework.UIHelper;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -46,6 +47,9 @@ public class AchievementView {
             pane.addItem(new GuiItem(achievementItem), slot % 9, slot / 9);
             slot++;
         }
+        
+        // 返回按钮
+        pane.addItem(UIHelper.createBackButton(), 0, 5);
         
         gui.addPane(pane);
         gui.show(player);

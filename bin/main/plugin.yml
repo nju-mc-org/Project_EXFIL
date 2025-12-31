@@ -1,0 +1,21 @@
+name: Project_EXFIL
+version: '1.14.514'
+main: org.nmo.project_exfil.ProjectEXFILPlugin
+api-version: '1.21'
+authors: [ NJU Minecraft Organization, Kingcq ]
+description: Tarkov-like game in Minecraft, a simple paper plugin
+website: nmo.net.cn
+depend: [FastAsyncWorldEdit, ProtocolLib, QualityArmory, Citizens, Sentinel]
+softdepend: [PlaceholderAPI, DecentHolograms, TAB, Vault, LuckPerms, XConomy, Parties, ItemsAdder]
+commands:
+  exfil:
+    description: Main command for Project EXFIL
+    usage: /exfil [setextract]
+    permission: exfil.use
+permissions:
+  exfil.admin:
+    description: Admin permission for Project EXFIL
+    default: op
+  exfil.use:
+    description: User permission for Project EXFIL
+    default: true

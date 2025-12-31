@@ -52,6 +52,10 @@ public final class ProjectEXFILPlugin extends JavaPlugin {
     private org.nmo.project_exfil.data.PlayerDataManager playerDataManager;
     private org.nmo.project_exfil.manager.LeaderboardManager leaderboardManager;
     private org.nmo.project_exfil.manager.LootPresetManager lootPresetManager;
+    private org.nmo.project_exfil.manager.MapOverviewManager mapOverviewManager;
+    private org.nmo.project_exfil.manager.TacticalActionManager tacticalActionManager;
+    private org.nmo.project_exfil.manager.TeamCommunicationManager teamCommunicationManager;
+    private org.nmo.project_exfil.manager.WeaponModificationManager weaponModificationManager;
     private MapSelectionView mapSelectionView;
     private MainMenuView mainMenuView;
     private TeamMenuView teamMenuView;
@@ -102,9 +106,13 @@ public final class ProjectEXFILPlugin extends JavaPlugin {
         this.playerDataManager = new org.nmo.project_exfil.data.PlayerDataManager(this);
         this.leaderboardManager = new org.nmo.project_exfil.manager.LeaderboardManager(this);
         this.lootPresetManager = new org.nmo.project_exfil.manager.LootPresetManager(this);
+        this.mapOverviewManager = new org.nmo.project_exfil.manager.MapOverviewManager(this);
+        this.tacticalActionManager = new org.nmo.project_exfil.manager.TacticalActionManager(this);
+        this.teamCommunicationManager = new org.nmo.project_exfil.manager.TeamCommunicationManager(this);
+        this.weaponModificationManager = new org.nmo.project_exfil.manager.WeaponModificationManager(this);
         
-        // Initialize NPC Performance Optimizer
-        new org.nmo.project_exfil.manager.NPCPerformanceOptimizer(this);
+        // Initialize API Manager
+        new org.nmo.project_exfil.api.ExfilAPIManager(this);
         
         // Initialize UI
         this.mapSelectionView = new MapSelectionView(gameManager);
@@ -137,6 +145,7 @@ public final class ProjectEXFILPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new org.nmo.project_exfil.listener.TaskAchievementListener(this), this);
         getServer().getPluginManager().registerEvents(new org.nmo.project_exfil.listener.PlayerDataListener(this), this);
         getServer().getPluginManager().registerEvents(new org.nmo.project_exfil.listener.ArmorProtectionListener(this), this);
+        getServer().getPluginManager().registerEvents(new org.nmo.project_exfil.listener.TacticalActionListener(this, tacticalActionManager), this);
         
         // Register Footstep system
         org.nmo.project_exfil.footsteps.Footstep footstep = new org.nmo.project_exfil.footsteps.Footstep();
@@ -231,6 +240,22 @@ public final class ProjectEXFILPlugin extends JavaPlugin {
     public org.nmo.project_exfil.manager.LootPresetManager getLootPresetManager() {
         return lootPresetManager;
     }
+    
+    public org.nmo.project_exfil.manager.MapOverviewManager getMapOverviewManager() {
+        return mapOverviewManager;
+    }
+    
+    public org.nmo.project_exfil.manager.TacticalActionManager getTacticalActionManager() {
+        return tacticalActionManager;
+    }
+    
+    public org.nmo.project_exfil.manager.TeamCommunicationManager getTeamCommunicationManager() {
+        return teamCommunicationManager;
+    }
+    
+    public org.nmo.project_exfil.manager.WeaponModificationManager getWeaponModificationManager() {
+        return weaponModificationManager;
+    }
 
     /**
      * Plugin shutdown logic
@@ -240,6 +265,11 @@ public final class ProjectEXFILPlugin extends JavaPlugin {
         // 保存所有玩家数据
         if (playerDataManager != null) {
             playerDataManager.saveAll(false); // 同步保存，确保数据不丢失
+        }
+        
+        // 清理战术动作管理器和俯瞰地图管理器
+        if (mapOverviewManager != null) {
+            mapOverviewManager.cleanup();
         }
         
         plugin = null;

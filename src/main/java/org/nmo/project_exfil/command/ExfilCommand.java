@@ -38,6 +38,8 @@ public class ExfilCommand implements CommandExecutor, TabCompleter {
         subCommands.put("delete", new DeleteCommand(plugin));
         subCommands.put("importmap", new ImportMapCommand(plugin));
         subCommands.put("loot", new LootCommand(plugin));
+        subCommands.put("mark", new org.nmo.project_exfil.command.sub.MarkCommand(plugin));
+        subCommands.put("mod", new org.nmo.project_exfil.command.sub.ModCommand(plugin));
     }
 
     @Override

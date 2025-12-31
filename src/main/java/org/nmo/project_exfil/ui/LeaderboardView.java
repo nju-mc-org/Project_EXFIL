@@ -11,6 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.nmo.project_exfil.manager.LeaderboardManager;
+import org.nmo.project_exfil.ui.framework.UIHelper;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -37,16 +38,23 @@ public class LeaderboardView {
         ChestGui gui = new ChestGui(6, "排行榜 - " + getTypeName(type));
         gui.setOnGlobalClick(event -> {
             event.setCancelled(true);
+            if (!(event.getWhoClicked() instanceof Player)) return;
+            Player clickPlayer = (Player) event.getWhoClicked();
+            
             // 切换排行榜类型
             int slot = event.getSlot();
             if (slot == 45) {
-                open(player, LeaderboardManager.LeaderboardType.KILLS);
+                UIHelper.playClickSound(clickPlayer);
+                open(clickPlayer, LeaderboardManager.LeaderboardType.KILLS);
             } else if (slot == 46) {
-                open(player, LeaderboardManager.LeaderboardType.EXTRACTS);
+                UIHelper.playClickSound(clickPlayer);
+                open(clickPlayer, LeaderboardManager.LeaderboardType.EXTRACTS);
             } else if (slot == 47) {
-                open(player, LeaderboardManager.LeaderboardType.VALUE);
+                UIHelper.playClickSound(clickPlayer);
+                open(clickPlayer, LeaderboardManager.LeaderboardType.VALUE);
             } else if (slot == 48) {
-                open(player, LeaderboardManager.LeaderboardType.PLAY_TIME);
+                UIHelper.playClickSound(clickPlayer);
+                open(clickPlayer, LeaderboardManager.LeaderboardType.PLAY_TIME);
             }
         });
         
@@ -94,6 +102,9 @@ public class LeaderboardView {
             type == LeaderboardManager.LeaderboardType.PLAY_TIME ? NamedTextColor.GOLD : NamedTextColor.GRAY));
         timeItem.setItemMeta(timeMeta);
         buttonPane.addItem(new GuiItem(timeItem), 3, 0);
+        
+        // 返回按钮
+        buttonPane.addItem(UIHelper.createBackButton(), 8, 0);
         
         gui.addPane(pane);
         gui.addPane(buttonPane);

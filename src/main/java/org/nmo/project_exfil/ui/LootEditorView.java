@@ -19,6 +19,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.nmo.project_exfil.ProjectEXFILPlugin;
 import org.nmo.project_exfil.manager.LootManager;
 import org.nmo.project_exfil.manager.LootManager.LootItem;
+import org.nmo.project_exfil.ui.framework.UIHelper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -128,6 +129,16 @@ public class LootEditorView implements Listener {
         infoMeta.displayName(Component.text("Drag & Drop items from inventory to add", NamedTextColor.GRAY));
         infoItem.setItemMeta(infoMeta);
         navPane.addItem(new GuiItem(infoItem), 4, 0);
+        
+        // 返回按钮（返回到预设管理界面或主菜单）
+        navPane.addItem(UIHelper.createBackButton(p -> {
+            p.closeInventory();
+            // 如果有预设管理界面，返回到预设管理，否则关闭
+            if (plugin.getLootPresetManager() != null) {
+                org.nmo.project_exfil.ui.LootPresetView presetView = new org.nmo.project_exfil.ui.LootPresetView(plugin.getLootPresetManager());
+                presetView.open(p);
+            }
+        }), 1, 0);
 
         gui.addPane(navPane);
         gui.show(player);

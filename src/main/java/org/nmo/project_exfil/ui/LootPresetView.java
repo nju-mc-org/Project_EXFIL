@@ -10,6 +10,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.nmo.project_exfil.ProjectEXFILPlugin;
 import org.nmo.project_exfil.manager.LootPresetManager;
+import org.nmo.project_exfil.ui.framework.UIHelper;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -141,8 +142,14 @@ public class LootPresetView {
             if (pages.getPage() < pages.getPages() - 1) {
                 pages.setPage(pages.getPage() + 1);
                 gui.update();
+                if (event.getWhoClicked() instanceof Player) {
+                    UIHelper.playClickSound((Player) event.getWhoClicked());
+                }
             }
         }), 8, 0);
+        
+        // 返回按钮
+        navPane.addItem(UIHelper.createBackButton(p -> p.closeInventory()), 2, 0);
         
         gui.addPane(navPane);
         gui.show(player);
